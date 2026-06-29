@@ -1,8 +1,8 @@
 # 🏥 HealthAI India — Documentation Portal
 
 > **Building an AI-Powered Preventive Healthcare Platform**
->
-> A modular healthcare AI platform capable of predicting 6 health conditions, storing user-consented records in Supabase, and continuously improving through user feedback.
+
+ A modular healthcare AI platform capable of predicting 6 health conditions, storing user-consented records in Supabase, and continuously improving through user feedback.
 
 ---
 
@@ -247,5 +247,6 @@ flowchart LR
 
 > [!TIP]
 > Model `.pkl` files are committed to Git using **Git LFS** to track binary files efficiently.
-#   H e a l t h C a r e - M o d e l  
+#   H e a l t h C a r e - M o d e l 
+ 
  

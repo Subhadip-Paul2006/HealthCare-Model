@@ -422,3 +422,45 @@ graph TD
 * `supabase`: Cloud DB client interface.
 * `streamlit`: User interface construction.
 * `fastapi`: API gateway routing.
+
+---
+
+## 📚 10. Curated Study Materials & Video Tutorials
+
+Below is the verified list of core study resources and video tutorials required to master the machine learning, database, and backend engineering concepts implemented in HealthAI India.
+
+### 🎥 Core Tutorial Video References
+
+| Topic / Tool | Video Link | Focus |
+|:---|:---|:---|
+| **Logistic Regression** | [Watch Video](https://youtu.be/UZPfbG0jNec?si=CFhkPJyH_a46EWx9) | Sigmoid function, decision boundaries, cost function optimization |
+| **Decision Trees** | [Watch Video](https://youtu.be/IZnno-dKgVQ?si=mOmd8Gukn3PvTL3) | Entropy, Gini impurity splits, pre-pruning techniques |
+| **Random Forest** | [Watch Video](https://youtu.be/F9uESCHGjhA?si=Z-hID9ja21hi86zS) | Bootstrap aggregating, ensemble scoring, feature subspace sampling |
+| **XGBoost** | [Watch Video](https://youtu.be/C6aDw4y8qJ0?si=byx0Fcco6LgAWsWa) | Gradient boosting, Taylor expansion math, regularization parameters |
+| **LightGBM** | [Watch Video](https://youtu.be/4p5EQtyxSyI?si=B6t-8EiOSOw_RaY8) | Leaf-wise tree growth, GOSS and EFB algorithms |
+| **K-Means Clustering** | [Watch Video](https://youtu.be/EItlUEPCIzM?si=aEzMUj_JXkcPX-y-) | Lloyd's algorithm, K-Means++ centroid initialization, Elbow method |
+| **KNN Imputation** | [Watch Video](https://youtu.be/abnL_GUGub4?si=YFjLKr_5ISrpyr-L) | Euclidean distance metrics, neighbor weight settings, missing values |
+| **SMOTE Rebalancing** | [Watch Video](https://youtu.be/yh2AKoJCV3k?si=dv8bh23N9j3659GA) | Synthetic sample generation, handling high class imbalance in Stroke data |
+| **Scikit-Learn** | [Watch Video](https://youtu.be/hDKCxebp88A?si=j7n13yZDPTKt2fjf) | Standard library estimators, preprocessing pipelines, model evaluation |
+| **Matplotlib** | [Watch Video](https://www.youtube.com/live/XaKn_cKFlSY?si=p8Pel6bJMCHjdSff) | Visualizing decision boundaries, distributions, and feature importance |
+| **FastAPI** | [Watch Video](https://youtu.be/2tagcO5v9aw?si=0n-s2YbRF5APQYYx) | Async endpoints, Pydantic request body validation, APIRouters |
+| **Supabase** | [Watch Video](https://youtu.be/dU7GwCOgvNY?si=GwtPkeYaWMdkIfFg) | PostgreSQL setup, JWT client authentication, Row Level Security policies |
+
+### 📖 Recommended Advanced Study Materials
+
+To progress from Stage 1 (MVP) to Stage 2 (LLM Integration) and Stage 3 (Sovereign Stack), study the following resources:
+
+#### 1. Machine Learning & Preprocessing Deep Dives
+* **Statistical Learning Book**: *An Introduction to Statistical Learning (ISLR)* by Gareth James et al. (Crucial for understanding the bias-variance trade-off and clustering).
+* **Imbalanced Dataset Strategies**: [Scikit-Learn User Guide on Imbalanced Datasets](https://imbalanced-learn.org/stable/user_guide.html) (Detailed analysis of SMOTE + Tomek Links).
+* **Gradient Boosting Theory**: [XGBoost Official Documentation Tutorials](https://xgboost.readthedocs.io/en/stable/tutorials/index.html) (Explains Hessian matrix optimizations).
+
+#### 2. Advanced Backend & Relational Database Design
+* **FastAPI Performance Tuning**: [FastAPI Advanced User Guide](https://fastapi.tiangolo.com/advanced/) (Setting up custom dependency injections and CORS configurations).
+* **PostgreSQL Row Level Security (RLS)**: [Supabase RLS Documentation & Best Practices](https://supabase.com/docs/guides/database/postgres/row-level-security) (Crucial for ensuring HIPAA/DPDP compliance).
+
+#### 3. Large Language Models (LLM) & RAG (Stage 2/3 Preparation)
+* **Local LLM Hosting**: [Ollama Reference Manual](https://github.com/ollama/ollama/blob/main/docs/api.md) (Explains how to stream generated tokens via HTTP REST).
+* **Retrieval-Augmented Generation**: [LangChain / LlamaIndex Prompt Engineering Guide](https://www.promptingguide.ai/) (Best practices for structuring medical clinical contexts without hallucinations).
+* **Sovereign AI Initiatives in India**: Research papers on *Bhashini AI* and *SUTRA LLMs* (Excellent context for understanding multi-lingual tokenization).
+

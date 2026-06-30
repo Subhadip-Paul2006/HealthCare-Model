@@ -1,585 +1,393 @@
 # 📋 Product Requirements Document (PRD) — HealthAI India
 
-HealthAI India is an indigenous, AI-powered preventive healthcare platform built with the vision of becoming a **Made in India Healthcare AI Ecosystem**. The initial version provides zero-barrier, anonymous health risk assessments across 6 health domains — no login, no signup, no friction.
+HealthAI India is an indigenous, AI-powered preventive healthcare platform developed in India with the long-term vision of becoming a **Made in India Healthcare AI Ecosystem**. 
+
+Unlike simple prediction tools, HealthAI India integrates a secure, location-based identity framework (HealthAI ID) with clinical-grade machine learning models to provide secure longitudinal health tracking.
 
 ---
 
 ## 📌 Table of Contents
 
-1. [Product Vision & Goals](#-1-product-vision--goals)
-2. [Product Architecture & Feature Mindmap](#-2-product-architecture--feature-mindmap)
-3. [User Flow](#-3-user-flow)
-4. [User Personas & Journey Maps](#-4-user-personas--journey-maps)
-5. [Prediction Modules — Functional Requirements](#-5-prediction-modules--functional-requirements)
-6. [Questionnaire Design Principles](#-6-questionnaire-design-principles)
-7. [Supabase Integration — Anonymous Prediction Storage](#-7-supabase-integration--anonymous-prediction-storage)
-8. [Power BI Analytics](#-8-power-bi-analytics)
-9. [Incremental Release Roadmap](#-9-incremental-release-roadmap)
-10. [Success Metrics (KPIs)](#-10-success-metrics-kpis)
-11. [What's In vs. What's Out](#-11-whats-in-vs-whats-out)
+1. [Product Vision & Segmentation](#-1-product-vision--segmentation)
+2. [Main Development Roadmap](#-2-main-development-roadmap)
+3. [🚀 Project Progress Tracker](#-project-progress-tracker)
+4. [Authentication & Registration Flows](#-3-authentication--registration-flows)
+5. [HealthAI ID System Architecture](#-4-healthai-id-system-architecture)
+6. [Updated User Flow](#-5-updated-user-flow)
+7. [User Personas & Journey Maps](#-6-user-personas--journey-maps)
+8. [Prediction Modules — Functional Requirements](#-7-prediction-modules--functional-requirements)
+9. [Human-Friendly Questionnaire Design](#-8-human-friendly-questionnaire-design)
+10. [Database Architecture & Supabase Tables](#-9-database-architecture--supabase-tables)
+11. [Detailed Phase-Wise Implementation Plan](#-10-detailed-phase-wise-implementation-plan)
+12. [Success Metrics & KPIs](#-11-success-metrics--kpis)
+13. [What's In vs. What's Out](#-12-whats-in-vs-whats-out)
 
 ---
 
-## 🎯 1. Product Vision & Goals
+## 🎯 1. Product Vision & Segmentation
 
-### Current Phase (MVP)
+HealthAI India enforces a strict separation of timeline scopes to deliver value immediately while planning for national scale:
 
-1. **Zero-Barrier Access**: Any visitor can use any prediction module instantly — no account creation, no authentication.
-2. **Multi-Domain Screening**: Risk assessments for Diabetes, Heart Disease, Stroke, Personality, Mental Health, and Sleep Health.
-3. **Human-Friendly Questionnaires**: Plain-language questions — never raw dataset column names. BMI calculated from height/weight automatically.
-4. **Anonymous Data Collection**: Every prediction stored with timestamp, responses, calculated features, prediction, and confidence score — no personal identity.
-5. **Incremental Delivery**: Each phase delivers a fully working, deployable application.
+### MVP (Current Version)
+* **Mandatory Authentication**: Secure phone-number-based registration and login system.
+* **Geographical Identity**: Automatic generation of the permanent HealthAI ID.
+* **Dashboard & History**: Logged-in user home dashboard listing personal prediction logs over time.
+* **6 ML Engines**: Core risk assessment engines powered by traditional machine learning algorithms (XGBoost, RandomForest, LightGBM, K-Means).
+* **Human-Friendly Inputs**: Interactive, non-technical questionnaires.
 
-### Future Phase
-
-6. **Explainable AI**: Open-source models (Gemma, Llama, Mistral, Phi) explain predictions and generate health reports.
-7. **AI Health Assistant**: Conversational AI layer that answers user questions based on prediction context.
+### Intermediate Versions
+* **Explainable AI (Stage 2)**: Integration of fine-tuned open-source models (Gemma, Llama, Mistral, Phi) to provide text-based risk explanations and generate PDF health reports.
 
 ### Long-Term Vision
-
-8. **Made in India AI Healthcare Stack**: Indigenous medical LLM, Indian Medical Knowledge Base, Indian language support, and continuous learning from user-consented data.
+* **Sovereign India AI Stack (Stage 3)**: Indigenous Medical LLM trained on local clinical datasets, RAG engines using Indian medical knowledge bases, regional language translations, and continuous, consent-based model retraining pipelines.
 
 ---
 
-## 🧠 2. Product Architecture & Feature Mindmap
+## 🏁 2. Main Development Roadmap
+
+This high-level roadmap outlines the development plan of HealthAI India from Day 1 to the long-term sovereign AI stack.
 
 ```mermaid
-mindmap
-  root((HealthAI India Platform))
-    Physiological AI Models
-      Diabetes Prediction
-        PIMA Indians Dataset
-        XGBoost Classifier
-        BMI Auto-calculation
-      Heart Disease Prediction
-        Cleveland Clinic Dataset
-        Random Forest
-        13 Clinical Indicators
-      Stroke Prediction
-        Kaggle Stroke Dataset
-        LightGBM + SMOTE
-        Threshold 0.35 for Recall
-    Psychological AI Models
-      OCEAN Personality
-        10-item TIPI Scale
-        K-Means Archetypes
-        Reverse Scoring Logic
-      Mental Health Assessment
-        OSMI Survey Dataset
-        Workplace & Support Factors
-        Random Forest
-      Sleep Health Predictor
-        Sleep Lifestyle Dataset
-        Multi-class XGBoost
-        3 Disorder Categories
-    Core Platform Architecture
-      FastAPI Backend
-        Pydantic Validation
-        Modular Routers
-        Model Cache Layer
-      Streamlit Frontend
-        Multi-page Navigation
-        Plotly Dashboards
-        No Authentication Required
-      Supabase PostgreSQL
-        Anonymous Prediction Storage
-        Timestamped Records
-        Retrainable Data Design
-    Analytics & Visualization
-      Power BI Dashboards
-        Disease Trends
-        Prediction Statistics
-        Model Performance
-        Anonymous Usage Analytics
-    Future Phase
-      Open Source AI Layer
-        Gemma / Llama / Mistral / Phi
-        Prediction Explanations
-        Health Report Generation
-      Conversational AI Assistant
-    Long-Term Vision
-      Indigenous Medical LLM
-      Indian Medical Knowledge Base
-      Indian Language Support
-      Continuous Learning Pipeline
+timeline
+    title HealthAI India Main Development Roadmap
+    stage Stage 0 : Foundation : HealthAI Identity System (Milestone 1) : Database Infrastructure (Milestone 2)
+    stage Stage 1 : First AI Module : Diabetes Prediction (XGBoost) : Integrated with Auth & DB
+    stage Stage 2 : Second AI Module : Heart Disease Model (Random Forest) : Unified Dashboard Integration
+    stage Stage 3 : Third AI Module : Stroke Prediction (LightGBM) : SMOTE & Recall optimization
+    stage Stage 4 : Additional Modules : Personality (K-Means) : Mental Health & Sleep Modules
+    stage Stage 5 : Stable Platform : 6 Integrated AI Modules : Complete Prediction History & Feedback
+    stage Stage 6 : OS AI Integration : Gemma / Llama / Mistral / Phi : Health Report & QA Gen
+    stage Stage 7 : Made in India AI Vision : Indigenous Medical LLM : Sovereign Healthcare RAG
 ```
+
+### 🚩 Stage 0 — Foundation
+#### Milestone 1 — HealthAI Identity System
+* Establish state, district, and city codes for regional mapping.
+* Define format for the permanent, unique HealthAI ID (e.g. `WB-01-0001-XXXXX`).
+* Document registration sequence and prepare backend database constraints.
+* *Note: The specific generation algorithm is a future development task. Only the framework, ID schema, and location mapping are configured at this stage.*
+
+#### Milestone 2 — Database Infrastructure
+* Configure Supabase PostgreSQL database tables.
+* Design authentication schema and test user registration flows.
+* Implement user profile creations, setting up the basic dashboard.
+* *Outcome*: Users can register, log in, view their dashboard, and obtain their HealthAI ID. No prediction modules are present.
+
+### 🚩 Stage 1 — First AI Module
+* Train and optimize the Diabetes Prediction XGBoost model using the PIMA dataset.
+* Create a dedicated FastAPI endpoint and Streamlit page.
+* Integrate database writes to log inputs and outputs under the authenticated user.
+* *Deliverable*: Version 1 (Authentication + Supabase + Diabetes AI).
+
+### 🚩 Stage 2 — Second AI Module
+* Train and integrate the Heart Disease model (Random Forest) using the Cleveland clinic dataset.
+* Merge routes and update the unified dashboard.
+* *Deliverable*: Version 2 (Authentication + Supabase + Diabetes + Heart Disease).
+
+### 🚩 Stage 3 — Third AI Module
+* Preprocess and balance the Stroke dataset (SMOTE).
+* Train a LightGBM model and optimize the decision threshold to 0.35.
+* Integrate and deploy.
+* *Deliverable*: Version 3 (Authentication + Supabase + Diabetes + Heart Disease + Stroke).
+
+### 🚩 Stage 4 — Additional AI Modules
+* Incrementally train, test, and integrate the `Personality`, `Mental Health`, and `Sleep Health` engines.
+
+### 🚩 Stage 5 — Complete Healthcare Platform
+* Launch the first stable release of HealthAI India with all 6 AI modules, longitudinal history, dashboard trends, and user feedback logs.
+
+### 🚩 Stage 6 — Open Source AI Integration
+* Integrate local open-source LLMs (Gemma, Llama, Mistral, Phi) to complement the ML models, acting as the narrative explanation, health report, and QA assistant.
+
+### 🚩 Stage 7 — Made in India AI Vision
+* Long-term research stack: Indigenous Medical LLMs, RAG engines using Indian Clinical Guidelines, regional language support, and continuous learning systems.
 
 ---
 
-## 🔄 3. User Flow
+## 🚀 Project Progress Tracker
 
-### Complete User Journey (No Authentication)
+## Foundation
+- [ ] Collect datasets
+- [ ] Study codebooks
+- [ ] Create Data Dictionaries
+- [ ] Design Database
+- [ ] Configure Supabase
+- [ ] Build Authentication
+- [ ] Generate HealthAI ID
+
+## Diabetes AI
+- [ ] Data Cleaning
+- [ ] Feature Engineering
+- [ ] Model Training
+- [ ] Evaluation
+- [ ] Frontend
+- [ ] Backend
+- [ ] Supabase Integration
+- [ ] Testing
+
+## Heart Disease AI
+- [ ] Dataset
+- [ ] Training
+- [ ] Evaluation
+- [ ] Integration
+
+## Stroke AI
+- [ ] Dataset
+- [ ] Training
+- [ ] Evaluation
+- [ ] Integration
+
+## Personality AI
+- [ ] Dataset
+- [ ] Training
+- [ ] Integration
+
+## Mental Health AI
+- [ ] Dataset
+- [ ] Training
+- [ ] Integration
+
+## Sleep Health AI
+- [ ] Dataset
+- [ ] Training
+- [ ] Integration
+
+## AI Assistant
+- [ ] Open Source Model
+- [ ] Fine Tuning
+- [ ] Health Report Generation
+
+## Deployment
+- [ ] Backend
+- [ ] Frontend
+- [ ] Docker
+- [ ] Production Deployment
+
+---
+
+## 🔑 3. Authentication & Registration Flows
+
+To track longitudinal predictions securely, authentication is a mandatory core requirement of the application.
+
+### Registration flow:
+```text
+State Selection
+      ↓
+District Selection
+      ↓
+City Selection
+      ↓
+Phone Number (Primary Key)
+      ↓
+Full Name
+      ↓
+Date of Birth
+      ↓
+Password
+      ↓
+Confirm Password
+      ↓
+Generate Unique HealthAI ID (Backend)
+      ↓
+Account Created successfully
+```
+
+### Login flow:
+Returning users log in using:
+* **Phone Number**
+* **Password**
+
+*Note: No email or username login is supported. The phone number serves as the primary, unique identity.*
+
+---
+
+## 🪪 4. HealthAI ID System Architecture
+
+Each registered user receives a permanent **HealthAI ID** which serves as their sovereign health identifier.
+
+### ID Structure
+```text
+WB-01-0001-XXXXX
+```
+* **State Code** (e.g., `WB` for West Bengal)
+* **District Code** (e.g., `01` for Darjeeling)
+* **City Code** (e.g., `0001` for Siliguri)
+* **Sequential User Identifier** (`XXXXX` sequential integer assigned dynamically by backend)
+
+*Note: The core backend algorithm responsible for generating the sequential user identifier and syncing records will be developed separately. The PRD establishes its inputs, structural constraints, and mapping roles.*
+
+---
+
+## 🔄 5. Updated User Flow
+
+The application workflow transitions from an anonymous model to a secure, account-based system:
 
 ```text
-User visits website
-        │
-        ▼
-Select Disease / Health Module
-        │
-        ▼
-Fill Human-Friendly Questionnaire
-        │
-        ▼
-ML Model Prediction (Backend)
-        │
-        ▼
-Display Prediction Result
-  (Risk Level + Confidence Score)
-        │
-        ▼
-Store Anonymous Response
-  (with timestamp) → Supabase
-        │
-        ▼
-Optionally: Provide Feedback
-        │
-        ▼
-Done — No account needed
-```
-
-**Key Principle**: The entire flow is completed in a single session. No login. No account creation. No personal data collection. The user can visit, predict, and leave.
-
----
-
-## 👥 4. User Personas & Journey Maps
-
-### Persona 1: Raj (42, Software Engineer)
-- **Need**: Family history of diabetes; wants quick, frictionless self-screening.
-- **Behavior**: High digital literacy, values privacy, prefers no signup hassle.
-- **Journey**: Google search → Visit website → Select Diabetes → Fill questionnaire → Get risk prediction → Done.
-
-### Persona 2: Dr. Priya (38, General Physician)
-- **Need**: Wants a second-opinion screening tool to recommend to patients with limited lab access.
-- **Behavior**: Trusts data, wants to see model confidence and feature importance.
-- **Journey**: Bookmark website → Recommend to patient → Patient uses it → Discuss results.
-
-### Persona 3: Anjali (26, Graduate Student)
-- **Need**: Experiencing sleep disruption and anxiety; wants holistic mental + sleep assessment.
-- **Behavior**: Prefers simple, non-intimidating interface; wants immediate answers.
-- **Journey**: Link shared by friend → Visit website → Select Sleep Health → Fill questions → Get prediction → Also try Mental Health.
-
----
-
-### User Journey: Raj — Diabetes Self-Screening
-
-```mermaid
-journey
-    title Raj's Diabetes Screening Journey on HealthAI India
-    section Discovery
-      Finds HealthAI via Google search: 5: Raj
-      Reads landing page features: 5: Raj
-    section Prediction — Diabetes
-      Selects Diabetes module: 5: Raj
-      Answers simple health questions: 4: Raj
-      Enters height, weight, blood pressure: 4: Raj
-      BMI auto-calculated by system: 5: Raj, FastAPI
-      Submits questionnaire: 5: Raj
-      Sees High Risk 76% result instantly: 5: Raj, XGBoost Model
-    section Result & Data Storage
-      Views detailed risk breakdown: 5: Raj
-      Anonymous prediction stored to Supabase: 5: Supabase
-    section Optional Follow-up
-      Returns 3 months later for recheck: 4: Raj
-      No login needed — just visit again: 5: Raj
+User
+  ↓
+Register (Input State, District, City, Phone, Name, DOB, Password)
+  ↓
+Login (Phone Number + Password)
+  ↓
+Dashboard (View personal HealthAI ID, past risk history, and trends)
+  ↓
+Select Disease Module (Diabetes, Heart, Stroke, Personality, Mental Health, Sleep)
+  ↓
+Fill Questionnaire (Human-friendly inputs)
+  ↓
+ML Prediction (Backend performs scaling and inference)
+  ↓
+Store Prediction (Record logs, outputs, and user consent)
+  ↓
+Supabase Database
+  ↓
+Prediction History (Logs updated on user dashboard)
+  ↓
+Future Model Retraining (Consented data periodically retrained)
 ```
 
 ---
 
-### User Journey: Anjali — Mental Health + Sleep Assessment
+## 👥 6. User Personas & Journey Maps
 
-```mermaid
-journey
-    title Anjali's Mental & Sleep Health Journey
-    section Discovery
-      Discovers platform via college wellness link: 5: Anjali
-      No signup needed: 5: Anjali
-    section Sleep Assessment
-      Selects Sleep Health module: 5: Anjali
-      Enters sleep duration, stress level: 4: Anjali
-      Answers lifestyle questions: 4: Anjali
-      Views Insomnia High Risk result: 4: Anjali, XGBoost Model
-    section Mental Health Assessment
-      Selects Mental Health module: 5: Anjali
-      Answers 9 workplace and support questions: 3: Anjali
-      Views Treatment Recommended result: 4: Anjali, Random Forest
-    section Feedback
-      Optionally provides anonymous feedback: 4: Anjali
-      Leaves website — no account created: 5: Anjali
-```
+### Persona 1: Raj (42, Software Engineer in Bengaluru)
+* **Need**: Family history of diabetes; wants to securely track his cardiovascular and diabetic risk indicators every 3 months.
+* **Behavior**: Tech-savvy, wants to verify data security and see his history over time.
+* **Journey**: Visits portal -> Registers with location, phone, and password -> Receives HealthAI ID -> Logs in -> Fills Diabetes form -> Views High Risk result -> Selects to save -> Sees updated dashboard.
+
+### Persona 2: Dr. Priya (38, General Physician in Siliguri)
+* **Need**: Wants to recommend a secure, structured health-tracking platform to patients with limited local laboratory access.
+* **Behavior**: Clinical expert, values structured IDs for regional health statistics.
+* **Journey**: Views dashboard trends -> Directs patient to sign up with their city code -> Reviews patient's history logs during consults.
 
 ---
 
-## 🩺 5. Prediction Modules — Functional Requirements
+## 🩺 7. Prediction Modules — Functional Requirements
 
-### Module 1: Diabetes Prediction
+The core platform features 6 machine learning models:
 
-| Requirement | Detail |
-|:---|:---|
-| **Dataset** | PIMA Indians Diabetes Dataset |
-| **Features** | Glucose, Blood Pressure, Skin Thickness, Insulin, BMI, Diabetes Pedigree Function, Age |
-| **Target** | Binary: Diabetic (1) / Non-Diabetic (0) |
-| **Models Evaluated** | Logistic Regression, Decision Tree, Random Forest, XGBoost, LightGBM |
-| **Selected Model** | XGBoost Classifier (based on evaluation) |
-| **Key UX Feature** | BMI auto-calculated from user-input height and weight |
-| **Output** | Risk Level (Low/High) + Confidence Probability + Feature Importance |
-| **Questionnaire Inputs** | "What is your blood glucose level?", "What is your blood pressure?", "How tall are you?", "How much do you weigh?", etc. |
+### 1. Diabetes Prediction
+* **Dataset**: PIMA Indians Diabetes Dataset.
+* **Model**: XGBoost Classifier.
+* **Inputs**: Glucose, Blood Pressure, Skin Thickness, Insulin, Height, Weight, Pedigree Function, Age.
+* **Output**: Risk classification + probability confidence score.
 
----
+### 2. Heart Disease Prediction
+* **Dataset**: Cleveland Clinic Heart Disease Dataset.
+* **Model**: Random Forest Classifier.
+* **Inputs**: Chest pain type, Resting blood pressure, Cholesterol, Fasting blood sugar, resting ECG, max heart rate, angina, etc.
+* **Output**: Risk classification + probability confidence score.
 
-### Module 2: Heart Disease Prediction
+### 3. Stroke Prediction
+* **Dataset**: Kaggle Stroke Dataset.
+* **Model**: LightGBM + SMOTE (optimized for recall at a decision threshold of 0.35).
+* **Inputs**: Hypertension, heart disease, marital status, work type, average glucose, height, weight, smoking.
+* **Output**: Recall-optimized stroke risk assessment.
 
-| Requirement | Detail |
-|:---|:---|
-| **Dataset** | Cleveland Clinic Heart Disease Dataset |
-| **Features** | 13 clinical indicators (age, sex, chest pain type, resting BP, cholesterol, fasting blood sugar, resting ECG, max heart rate, exercise-induced angina, ST depression, slope, vessels, thal) |
-| **Target** | Binary: Heart Disease (1) / No Heart Disease (0) |
-| **Models Evaluated** | Logistic Regression, Decision Tree, Random Forest, XGBoost, LightGBM |
-| **Selected Model** | Random Forest (based on evaluation) |
-| **Output** | Risk Level + Confidence Probability + Contributing Factors |
-| **Questionnaire Inputs** | "Do you experience chest pain?", "What type?", "What is your resting blood pressure?", "What is your cholesterol level?", etc. |
+### 4. Personality Assessment
+* **Scale**: Ten-Item Personality Inventory (TIPI).
+* **Model**: K-Means clustering.
+* **Inputs**: 10 scale questions (1-7 Likert scale).
+* **Output**: Archetype assignment + OCEAN traits breakdown.
 
----
+### 5. Mental Health Assessment
+* **Dataset**: OSMI Survey.
+* **Model**: Random Forest Classifier.
+* **Inputs**: Family history, workplace support, care access, wellness benefits.
+* **Output**: Recommendation for treatment (Yes/No).
 
-### Module 3: Stroke Prediction
-
-| Requirement | Detail |
-|:---|:---|
-| **Dataset** | Kaggle Stroke Prediction Dataset |
-| **Features** | Gender, Age, Hypertension, Heart Disease, Marital Status, Work Type, Residence Type, Average Glucose Level, BMI, Smoking Status |
-| **Target** | Binary: Stroke (1) / No Stroke (0) |
-| **Models Evaluated** | Logistic Regression, Decision Tree, Random Forest, XGBoost, LightGBM |
-| **Selected Model** | LightGBM + SMOTE (optimized for recall at threshold 0.35) |
-| **Output** | Risk Level + Confidence Probability + Key Risk Factors |
-| **Questionnaire Inputs** | "Have you been diagnosed with hypertension?", "What is your average glucose level?", "Do you smoke?", etc. |
+### 6. Sleep Health Predictor
+* **Dataset**: Sleep Lifestyle Dataset.
+* **Model**: Multi-class XGBoost.
+* **Inputs**: Sleep duration, quality, physical activity, stress level, blood pressure, heart rate, daily steps.
+* **Output**: Multi-class categorization of sleep disorder risk (None, Insomnia, Sleep Apnea).
 
 ---
 
-### Module 4: Personality Assessment
+## 📝 8. Human-Friendly Questionnaire Design
 
-| Requirement | Detail |
-|:---|:---|
-| **Scale** | Ten-Item Personality Inventory (TIPI) |
-| **Traits** | Openness (O), Conscientiousness (C), Extraversion (E), Agreeableness (A), Neuroticism (N) |
-| **Models Evaluated** | K-Means Clustering for archetype classification |
-| **Scoring** | Reverse scoring for items 2, 6, 8, 9, 10; OCEAN scores as averages |
-| **Output** | Personality Archetype + OCEAN Score Breakdown (0–100%) |
-| **Questionnaire Inputs** | 10 human-friendly questions mapping to TIPI items |
-
----
-
-### Module 5: Mental Health Assessment
-
-| Requirement | Detail |
-|:---|:---|
-| **Dataset** | OSMI Mental Health in Tech Survey Dataset |
-| **Features** | Workplace factors, support availability, treatment history, family history |
-| **Target** | Binary: Treatment Recommended (1) / Not Recommended (0) |
-| **Models Evaluated** | Logistic Regression, Decision Tree, Random Forest, XGBoost |
-| **Selected Model** | Random Forest (based on evaluation) |
-| **Output** | Assessment Result + Confidence Score + Key Contributing Factors |
-| **Questionnaire Inputs** | "Do you have a family history of mental illness?", "Do you feel supported at work?", "Have you sought treatment before?", etc. |
-
----
-
-### Module 6: Sleep Health Prediction
-
-| Requirement | Detail |
-|:---|:---|
-| **Dataset** | Sleep Lifestyle Dataset |
-| **Features** | Sleep duration, sleep quality, stress level, physical activity, BMI category, occupation |
-| **Target** | Multi-class: Sleep Disorder categories |
-| **Models Evaluated** | Logistic Regression, Decision Tree, Random Forest, XGBoost |
-| **Selected Model** | Multi-class XGBoost |
-| **Output** | Sleep Health Category + Confidence Score + Risk Factors |
-| **Questionnaire Inputs** | "How many hours do you sleep per night?", "How would you rate your sleep quality?", "How would you rate your daily stress level?", etc. |
-
----
-
-## 📝 6. Questionnaire Design Principles
-
-### Core Rule: No Raw Dataset Columns
-
-Every questionnaire must be designed with these principles:
-
-1. **Human-friendly language** — Questions read like a doctor's conversation, not a database query
-2. **Automatic feature calculation** — BMI, risk scores, derived features computed by the backend
-3. **Contextual help** — Each question includes brief guidance on what the answer means
-4. **Logical ordering** — Questions flow naturally (demographics → lifestyle → clinical → family history)
-
-### Design Examples
+To prevent confusion, raw dataset column names are completely abstracted.
 
 | ❌ Never Show This | ✅ Show This Instead |
 |:---|:---|
 | `GenHlth` (scale 1-5) | "How would you rate your overall health?" (Excellent / Very Good / Good / Fair / Poor) |
-| `BMI` | "What is your height?" + "What is your weight?" → BMI calculated automatically |
-| `Chol` | "What is your total cholesterol level?" (with unit clarification) |
+| `BMI` (raw float) | "What is your height in cm?" and "What is your weight in kg?" (BMI calculated internally) |
 | `FBS > 120` | "Is your fasting blood sugar level above 120 mg/dL?" (Yes / No) |
-| `Smoker` | "What is your smoking status?" (Never / Former / Current) |
 | `HighBP` | "Have you been diagnosed with high blood pressure?" (Yes / No) |
-| `HeartDiseaseorAttack` | "Have you ever been told you have heart disease?" (Yes / No) |
 
 ---
 
-## 🗄️ 7. Supabase Integration — Anonymous Prediction Storage
+## 🗄️ 9. Database Architecture & Supabase Tables
 
-### Design Philosophy
+All records are tied to the authenticated user account. The Supabase database stores registration details, location markers, predictions, and clinical values:
 
-Supabase remains the central database, but instead of storing registered users, it stores **anonymous prediction history**. This data serves two purposes:
-
-1. **Analytics** — Power BI dashboards for disease trends and usage statistics
-2. **Future Retraining** — Structured data designed for periodic model improvement
-
-### Data Stored Per Prediction
-
-| Field | Type | Description |
-|:---|:---|:---|
-| `id` | UUID | Unique prediction identifier (auto-generated) |
-| `timestamp` | Timestamptz | Exact date and time of prediction |
-| `disease_type` | Text | Module used (diabetes, heart, stroke, personality, mental_health, sleep_health) |
-| `questionnaire_responses` | JSONB | All user-provided answers in original form |
-| `calculated_features` | JSONB | Derived features (BMI, risk scores, encoded values) |
-| `prediction` | Text | Model output (risk level or classification) |
-| `confidence_score` | Float | Model confidence probability (0.0 – 1.0) |
-| `model_version` | Text | Model identifier used for this prediction |
-| `optional_feedback` | Text | User feedback if provided (nullable) |
-
-### Data Design for Retraining
-
-The schema is deliberately structured so that:
-
-- Raw questionnaire responses are preserved (can be preprocessed again with new pipelines)
-- Calculated features are stored (enables feature importance analysis)
-- Model version is tracked (enables A/B comparison across model iterations)
-- Timestamps allow temporal analysis (seasonal disease trends)
-- All data is anonymous — no PII, no user identity
+```text
+users (Supabase native authentication schema)
+  ↓
+user_profiles (Tied to user_id, stores full_name, dob, phone, HealthAI ID, state, district, city)
+  ↓
+predictions (Tied to user_profile, stores timestamp, disease_type, risk_probability, label)
+  ↓
+feedback (Tied to prediction_id, user feedback and comments)
+  ↓
+consent_logs (Tied to user_id, stores privacy consent logs)
+  ↓
+disease_records (Tied to prediction_id, stores the actual inputs)
+   ├── diabetes_records
+   ├── heart_records
+   ├── stroke_records
+   ├── personality_records
+   ├── mental_health_records
+   └── sleep_records
+```
 
 ---
 
-## 📊 8. Power BI Analytics
+## 📅 10. Detailed Phase-Wise Implementation Plan
 
-Power BI is used exclusively for analytics and visualization. It connects to Supabase and provides:
-
-| Dashboard | Contents |
-|:---|:---|
-| **Disease Trends** | Prediction distribution across disease types over time |
-| **Prediction Statistics** | Total predictions, risk distribution (high vs. low), average confidence scores |
-| **Dataset Insights** | Feature distributions, demographic patterns in anonymous data |
-| **Model Performance** | Aggregated prediction confidence, feedback accuracy rates |
-| **Usage Analytics** | Peak usage times, most-used modules, geographic patterns (if available) |
-
-**Note**: Power BI does NOT connect to any user identity system. All analytics are based on anonymous, aggregated prediction data.
-
----
-
-## 📅 9. Incremental Release Roadmap
+The project development must follow the detailed phase roadmap:
 
 ### Phase 0: Foundation
+* Supabase schemas, users setup, geographic tables, and HealthAI ID definition.
 
-```mermaid
-gantt
-    title HealthAI India — Phase 0: Foundation
-    dateFormat  YYYY-MM-DD
-    section Foundation
-    Dataset Collection & Research      :done,    2026-06-01, 2026-06-07
-    Supabase Schema Design (Anonymous) :done,    2026-06-05, 2026-06-10
-    Documentation System               :done,    2026-06-25, 2026-06-29
-```
+### Phase 1: Diabetes Prediction
+* EDA, XGBoost training, frontend form, and FastAPI backend routes.
 
-**Deliverable**: Supabase database configured, all datasets documented, data dictionaries created.
+### Phase 2: Heart Disease Prediction
+* Preprocessing, Random Forest training, and dashboard integration.
 
----
+### Phase 3: Stroke Prediction
+* LightGBM training + SMOTE, 0.35 threshold adjustment.
 
-### Phase 1: Diabetes Prediction (MVP v1)
+### Phase 4: Personality Assessment
+* K-Means archetype clustering.
 
-```mermaid
-gantt
-    title HealthAI India — Phase 1: Diabetes AI
-    dateFormat  YYYY-MM-DD
-    section Diabetes Module
-    PIMA Dataset EDA & Cleaning        :done,    2026-06-13, 2026-06-15
-    Feature Engineering & XGBoost      :active,  2026-06-15, 2026-06-18
-    Streamlit Diabetes UI              :         2026-06-19, 2026-06-22
-    FastAPI Diabetes Route             :         2026-06-20, 2026-06-23
-    Supabase Integration & Testing     :         2026-06-23, 2026-06-29
-```
+### Phase 5: Mental Health Assessment
+* OSMI processing, Random Forest training.
 
-**Deliverable**: Working web application with Diabetes prediction. Anyone can visit and get a risk assessment.
+### Phase 6: Sleep Health Assessment
+* Multi-class XGBoost implementation.
 
-**Repository**: Version 1 — Diabetes only.
+### Phase 7: LLM Assistant (Future Phase)
+* Ollama/Gemma integration, report generation, and explanation streaming.
 
 ---
 
-### Phase 2: Heart Disease Prediction (MVP v2)
+## 📈 11. Success Metrics & KPIs
 
-```mermaid
-gantt
-    title HealthAI India — Phase 2: Heart Disease AI
-    dateFormat  YYYY-MM-DD
-    section Heart Module
-    Cleveland Dataset Preprocessing    :         2026-06-30, 2026-07-03
-    Random Forest Training & Tuning    :         2026-07-03, 2026-07-06
-    UI + API + DB Integration          :         2026-07-07, 2026-07-12
-```
-
-**Deliverable**: Diabetes + Heart Disease — fully working application.
-
-**Repository**: Version 2 — Diabetes + Heart.
+* **Clinical Accuracy**: F1-Score $\geq$ 0.80 for physiological models; Stroke Recall $\geq$ 0.80.
+* **System Latency**: API inference return time $\leq$ 350ms.
+* **Platform Security**: 100% of prediction records verified with RLS based on `user_id = auth.uid()`.
 
 ---
 
-### Phase 3: Stroke Prediction (MVP v3)
-
-```mermaid
-gantt
-    title HealthAI India — Phase 3: Stroke AI
-    dateFormat  YYYY-MM-DD
-    section Stroke Module
-    Stroke Dataset Cleaning & SMOTE    :         2026-07-13, 2026-07-16
-    LightGBM Training & Threshold Opt  :         2026-07-16, 2026-07-19
-    Full Integration & Testing         :         2026-07-19, 2026-07-22
-```
-
-**Deliverable**: Diabetes + Heart + Stroke — fully working application.
-
-**Repository**: Version 3 — Diabetes + Heart + Stroke.
-
----
-
-### Phase 4: Personality Assessment (MVP v4)
-
-```mermaid
-gantt
-    title HealthAI India — Phase 4: Personality AI
-    dateFormat  YYYY-MM-DD
-    section Personality Module
-    TIPI Scoring Algorithm             :         2026-07-23, 2026-07-26
-    K-Means Archetype Clustering       :         2026-07-26, 2026-07-30
-    Assessment UI & Integration        :         2026-07-30, 2026-08-02
-```
-
-**Deliverable**: Diabetes + Heart + Stroke + Personality — fully working.
-
----
-
-### Phase 5: Mental Health Assessment (MVP v5)
-
-```mermaid
-gantt
-    title HealthAI India — Phase 5: Mental Health AI
-    dateFormat  YYYY-MM-DD
-    section Mental Health Module
-    OSMI Dataset Preprocessing         :         2026-08-03, 2026-08-06
-    Random Forest Training             :         2026-08-06, 2026-08-08
-    UI + API + DB Integration          :         2026-08-08, 2026-08-10
-```
-
-**Deliverable**: + Mental Health — fully working.
-
----
-
-### Phase 6: Sleep Health Assessment (Final MVP)
-
-```mermaid
-gantt
-    title HealthAI India — Phase 6: Sleep Health AI
-    dateFormat  YYYY-MM-DD
-    section Sleep Module
-    Sleep Lifestyle Dataset EDA        :         2026-08-11, 2026-08-14
-    Multi-class XGBoost Training       :         2026-08-14, 2026-08-16
-    UI + API + DB Integration          :         2026-08-16, 2026-08-18
-```
-
-**Deliverable**: Complete Healthcare AI Platform — all 6 modules working.
-
-**Repository**: Final Version — Complete platform.
-
----
-
-### Future Phase: AI Intelligence Layer
-
-```mermaid
-gantt
-    title HealthAI India — Future Phase: AI Assistant
-    dateFormat  YYYY-MM-DD
-    section AI Layer
-    Open Source Model Setup (Gemma/Llama) :         2026-08-19, 2026-08-25
-    Prediction Explanation Engine        :         2026-08-25, 2026-08-30
-    Health Report Generation              :         2026-08-30, 2026-09-05
-    Conversational AI Interface           :         2026-09-05, 2026-09-10
-```
-
----
-
-### Power BI Analytics Integration
-
-```mermaid
-gantt
-    title HealthAI India — Analytics Phase
-    dateFormat  YYYY-MM-DD
-    section Analytics
-    Power BI Supabase Connection       :         2026-09-11, 2026-09-14
-    Disease Distribution Dashboards    :         2026-09-14, 2026-09-18
-    Model Performance Monitoring       :         2026-09-18, 2026-09-22
-```
-
----
-
-## 📈 10. Success Metrics (KPIs)
-
-### ML Model Performance
-
-| Metric | Target | Measurement Method |
-|:---|:---:|:---|
-| F1-Score (Physiological models) | ≥ 0.80 | sklearn classification_report |
-| F1-Score (Psychological models) | ≥ 0.75 | sklearn classification_report |
-| Stroke Recall (Sensitivity) | ≥ 0.80 | True Positive Rate @ threshold 0.35 |
-
-### Platform Performance
-
-| Metric | Target | Measurement Method |
-|:---|:---:|:---|
-| API Inference Latency | ≤ 350ms | FastAPI response time middleware |
-| Page Load Time | ≤ 2s | Browser performance timing |
-| Concurrent Users | 100+ | Uvicorn `--workers 4` |
-
-### Adoption Metrics
-
-| Metric | Target | Measurement Method |
-|:---|:---:|:---|
-| Anonymous Predictions per Day | 500+ after 3 months | Supabase prediction count |
-| Optional Feedback Rate | ≥ 15% | feedback count / prediction count |
-| Module Coverage | All 6 modules used | Prediction distribution in Supabase |
-
----
-
-## ✅ 11. What's In vs. What's Out
+## ✅ 12. What's In vs. What's Out
 
 | Feature | Status | Notes |
-|:---|:---|:---|
-| Anonymous health risk predictions | ✅ In (MVP) | All 6 disease modules |
-| Human-friendly questionnaires | ✅ In (MVP) | Plain language, auto BMI calculation |
-| Supabase anonymous prediction storage | ✅ In (MVP) | Structured for future retraining |
-| Power BI analytics dashboards | ✅ In (MVP) | Disease trends, model performance |
-| Incremental deployment per module | ✅ In (MVP) | Each phase is a deployable release |
-| User login / signup / accounts | ❌ Out (MVP) | Zero-friction access is the priority |
-| User profiles / dashboards | ❌ Out (MVP) | No personal data collection |
-| Password reset / session management | ❌ Out (MVP) | Not applicable — no auth |
-| LLM-powered explanations | ❌ Future Phase | Requires stable ML pipeline first |
-| AI health assistant chatbot | ❌ Future Phase | Open-source models (Gemma/Llama) |
-| Indian language support | ❌ Long-Term Vision | Hindi, Bengali, Tamil, etc. |
-| Indigenous Medical LLM | ❌ Long-Term Vision | Research goal |
-| Mobile app (iOS/Android) | ❌ Future Phase | Web-first for MVP |
-
----
-
-## 📄 Document Alignment
-
-| Document | Focus |
-|:---|:---|
-| **Idea.md** | Vision, problem statement, future goals, why this matters for India |
-| **PRD.md** (this file) | Functional requirements, user flow, questionnaires, prediction modules, incremental releases |
-| **TRD.md** | Technical architecture, ML pipeline, Supabase schema, API design, deployment strategy |
-
----
-
-*HealthAI India — Building a Made in India Healthcare AI Ecosystem*
+|:---|:---:|:---|
+| Mandatory phone registration & login | ✅ In | Replaces anonymous entry. Core first module. |
+| Automatic HealthAI ID Generation | ✅ In | Based on geography and signup sequence. |
+| 6 ML Prediction Modules | ✅ In | Traditional Python ML engines. |
+| Longitudinal User Dashboard | ✅ In | Tracks history over time. |
+| AI Health Assistant (Generative) | ❌ Out (MVP) | Deferred to Stage 6 (Open Source LLMs). |
+| Native Multilingual translation | ❌ Out (MVP) | Deferred to Stage 7 (Long-Term sovereign stack). |

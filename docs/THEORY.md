@@ -352,12 +352,72 @@ erDiagram
         float pedigree
         int age
     }
+    heart_records {
+        uuid id PK
+        uuid prediction_id FK
+        int age
+        int sex
+        int chest_pain_type
+        float resting_bp
+        float cholesterol
+        int fasting_blood_sugar
+        int rest_ecg
+        float max_heart_rate
+        int exercise_angina
+        float oldpeak
+        int st_slope
+        int vessels_colored
+        int thalassemia
+    }
+    stroke_records {
+        uuid id PK
+        uuid prediction_id FK
+        float age
+        int hypertension
+        int heart_disease
+        float avg_glucose_level
+        float bmi
+        string smoking_status
+    }
+    personality_records {
+        uuid id PK
+        uuid prediction_id FK
+        float score_openness
+        float score_conscientiousness
+        float score_extraversion
+        float score_agreeableness
+        float score_neuroticism
+        string personality_archetype
+    }
+    mental_health_records {
+        uuid id PK
+        uuid prediction_id FK
+        int family_history
+        string work_interfere
+        string benefits
+        string care_options
+    }
+    sleep_records {
+        uuid id PK
+        uuid prediction_id FK
+        float sleep_duration
+        int quality_of_sleep
+        int stress_level
+        string blood_pressure
+        int heart_rate
+        int daily_steps
+    }
 
     users ||--|| user_profiles : "profile"
     users ||--o{ predictions : "registers"
     users ||--|| consent_logs : "grants"
     predictions ||--o| feedback : "receives"
     predictions ||--o| diabetes_records : "details"
+    predictions ||--o| heart_records : "details"
+    predictions ||--o| stroke_records : "details"
+    predictions ||--o| personality_records : "details"
+    predictions ||--o| mental_health_records : "details"
+    predictions ||--o| sleep_records : "details"
 ```
 
 ---

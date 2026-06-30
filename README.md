@@ -1,7 +1,8 @@
 # 🏥 HealthAI India — Documentation Portal
-**Building an AI-Powered Preventive Healthcare Platform**
 
- A modular healthcare AI platform capable of predicting 6 health conditions, storing user-consented records in Supabase, and continuously improving through user feedback.
+> **Building an AI-Powered Preventive Healthcare Platform**
+
+A modular healthcare AI platform capable of predicting 6 health conditions, storing user-consented records in Supabase, and continuously improving through user feedback.
 
 ---
 
@@ -22,117 +23,105 @@
 
 ---
 
-## 🗂️ Complete Repository Treeview
+## 🗂️ Repository Structure
 
 ```text
 HealthAI/
-│
-├── 📁 backend/                          # FastAPI Application Server
-│   ├── main.py                          # App entry point, CORS, router registration
-│   ├── database.py                      # Supabase client + SupabaseSyncManager class
-│   ├── dependencies.py                  # JWT auth dependency: get_current_user()
-│   ├── config.py                        # Settings (env vars via pydantic BaseSettings)
-│   ├── requirements.txt                 # Python dependencies
-│   │
-│   ├── 📁 routes/                       # Modular FastAPI APIRouters
-│   │   ├── auth.py                      # POST /auth/login, /auth/register, /auth/refresh
-│   │   ├── diabetes.py                  # POST /predict/diabetes, GET /history/diabetes
-│   │   ├── heart.py                     # POST /predict/heart
-│   │   ├── stroke.py                    # POST /predict/stroke
-│   │   ├── personality.py               # POST /predict/personality
-│   │   ├── mental.py                    # POST /predict/mental
-│   │   ├── sleep.py                     # POST /predict/sleep
-│   │   ├── feedback.py                  # POST /feedback
-│   │   └── llm.py                       # POST /explain (LLM streaming)
-│   │
-│   ├── 📁 schemas/                      # Pydantic Request/Response Models
+├── backend/                          # FastAPI application server
+│   ├── main.py                       # App entry point, CORS, router registration
+│   ├── database.py                   # Supabase client + sync manager
+│   ├── dependencies.py               # JWT auth dependency: get_current_user()
+│   ├── config.py                     # Settings (env vars via pydantic BaseSettings)
+│   ├── requirements.txt              # Python dependencies
+│   ├── routes/                       # Modular FastAPI routers
+│   │   ├── auth.py                   # POST /auth/login, /auth/register, /auth/refresh
+│   │   ├── diabetes.py               # POST /predict/diabetes, GET /history/diabetes
+│   │   ├── heart.py                  # POST /predict/heart
+│   │   ├── stroke.py                 # POST /predict/stroke
+│   │   ├── personality.py            # POST /predict/personality
+│   │   ├── mental.py                 # POST /predict/mental
+│   │   ├── sleep.py                  # POST /predict/sleep
+│   │   ├── feedback.py               # POST /feedback
+│   │   └── llm.py                    # POST /explain (LLM streaming)
+│   ├── schemas/                      # Pydantic request/response models
 │   │   ├── diabetes_schema.py
 │   │   ├── heart_schema.py
 │   │   ├── stroke_schema.py
 │   │   ├── personality_schema.py
 │   │   ├── mental_schema.py
 │   │   └── sleep_schema.py
-│   │
-│   ├── 📁 pipelines/                    # ML Pipeline classes (BaseModelPipeline + children)
-│   │   ├── base.py                      # Abstract BaseModelPipeline
+│   ├── pipelines/                    # ML pipeline classes
+│   │   ├── base.py                   # Abstract BaseModelPipeline
 │   │   ├── diabetes_pipeline.py
 │   │   ├── heart_pipeline.py
 │   │   ├── stroke_pipeline.py
 │   │   ├── personality_pipeline.py
 │   │   ├── mental_pipeline.py
 │   │   └── sleep_pipeline.py
-│   │
-│   └── 📁 tests/                        # Unit & Integration Tests
+│   └── tests/                        # Unit and integration tests
 │       ├── test_auth.py
 │       ├── test_diabetes.py
 │       └── test_heart.py
-│
-├── 📁 frontend/                         # Streamlit Web Client
-│   ├── app.py                           # Main router with st.navigation / st.sidebar
-│   ├── auth_ui.py                       # Login, signup, password reset pages
-│   ├── config.py                        # FASTAPI_URL, Supabase client setup
+├── frontend/                         # Streamlit web client
+│   ├── app.py                        # Main router with st.navigation / st.sidebar
+│   ├── auth_ui.py                    # Login, signup, password reset pages
+│   ├── config.py                    # FASTAPI_URL, Supabase client setup
 │   ├── requirements.txt
-│   │
-│   ├── 📁 pages/                        # Streamlit multi-page structure
-│   │   ├── 01_Dashboard.py              # Overview health summary
-│   │   ├── 02_Diabetes.py               # Diabetes prediction form
-│   │   ├── 03_Heart.py                  # Heart disease prediction form
-│   │   ├── 04_Stroke.py                 # Stroke prediction form
-│   │   ├── 05_Personality.py            # OCEAN personality assessment
-│   │   ├── 06_Mental_Health.py          # Mental health questionnaire
-│   │   ├── 07_Sleep.py                  # Sleep health assessment
-│   │   └── 08_History.py                # Prediction history & Power BI embed
-│   │
-│   └── 📁 components/                   # Reusable Streamlit UI widgets
-│       ├── prediction_card.py           # Risk card with gauge chart
-│       ├── history_chart.py             # Historical trend Plotly chart
-│       └── sidebar.py                   # Navigation + user info sidebar
-│
-├── 📁 database/                         # Supabase SQL Migrations
-│   ├── 01_users.sql                     # users + user_profiles tables
-│   ├── 02_predictions.sql               # global predictions table
-│   ├── 03_disease_records.sql           # All 6 disease record tables
-│   ├── 04_feedback.sql                  # feedback + consent_logs tables
-│   └── 05_rls_policies.sql              # All Row Level Security policies
-│
-├── 📁 models/                           # Trained ML Model Binaries
-│   ├── 📁 diabetes/
-│   │   ├── diabetes_model.pkl           # XGBClassifier
-│   │   └── diabetes_scaler.pkl          # MinMaxScaler
-│   ├── 📁 heart/
-│   │   ├── heart_model.pkl              # RandomForestClassifier
-│   │   └── heart_scaler.pkl             # StandardScaler
-│   ├── 📁 stroke/
-│   │   ├── stroke_model.pkl             # LGBMClassifier
-│   │   └── stroke_scaler.pkl            # StandardScaler
-│   ├── 📁 personality/
-│   │   └── personality_kmeans.pkl       # KMeans (k=4)
-│   ├── 📁 mental_health/
-│   │   ├── mental_model.pkl             # RandomForestClassifier
-│   │   └── mental_encoder.pkl           # LabelEncoder
-│   └── 📁 sleep/
-│       ├── sleep_model.pkl              # XGBClassifier (multi-class)
-│       └── sleep_scaler.pkl             # StandardScaler
-│
-├── 📁 datasets/                         # Source Datasets & Notebooks
-│   ├── 📁 diabetes/
+│   ├── pages/                        # Streamlit multi-page structure
+│   │   ├── 01_Dashboard.py           # Overview health summary
+│   │   ├── 02_Diabetes.py            # Diabetes prediction form
+│   │   ├── 03_Heart.py               # Heart disease prediction form
+│   │   ├── 04_Stroke.py              # Stroke prediction form
+│   │   ├── 05_Personality.py         # OCEAN personality assessment
+│   │   ├── 06_Mental_Health.py       # Mental health questionnaire
+│   │   ├── 07_Sleep.py               # Sleep health assessment
+│   │   └── 08_History.py             # Prediction history & Power BI embed
+│   └── components/                  # Reusable Streamlit UI widgets
+│       ├── prediction_card.py        # Risk card with gauge chart
+│       ├── history_chart.py          # Historical trend Plotly chart
+│       └── sidebar.py                # Navigation + user info sidebar
+├── database/                         # Supabase SQL migrations
+│   ├── 01_users.sql                  # users + user_profiles tables
+│   ├── 02_predictions.sql            # global predictions table
+│   ├── 03_disease_records.sql        # All 6 disease record tables
+│   ├── 04_feedback.sql                # feedback + consent_logs tables
+│   └── 05_rls_policies.sql           # All Row Level Security policies
+├── models/                           # Trained ML model binaries
+│   ├── diabetes/
+│   │   ├── diabetes_model.pkl         # XGBClassifier
+│   │   └── diabetes_scaler.pkl        # MinMaxScaler
+│   ├── heart/
+│   │   ├── heart_model.pkl            # RandomForestClassifier
+│   │   └── heart_scaler.pkl           # StandardScaler
+│   ├── stroke/
+│   │   ├── stroke_model.pkl           # LGBMClassifier
+│   │   └── stroke_scaler.pkl          # StandardScaler
+│   ├── personality/
+│   │   └── personality_kmeans.pkl     # KMeans (k=4)
+│   ├── mental_health/
+│   │   ├── mental_model.pkl           # RandomForestClassifier
+│   │   └── mental_encoder.pkl         # LabelEncoder
+│   └── sleep/
+│       ├── sleep_model.pkl            # XGBClassifier (multi-class)
+│       └── sleep_scaler.pkl           # StandardScaler
+├── datasets/                         # Source datasets and notebooks
+│   ├── diabetes/
 │   │   ├── pima_diabetes.csv
 │   │   └── diabetes_eda.ipynb
-│   ├── 📁 heart/
+│   ├── heart/
 │   │   ├── cleveland_heart.csv
 │   │   └── heart_eda.ipynb
-│   ├── 📁 stroke/
+│   ├── stroke/
 │   │   ├── stroke_data.csv
 │   │   └── stroke_eda.ipynb
-│   ├── 📁 personality/
+│   ├── personality/
 │   │   └── tipi_data.csv
-│   ├── 📁 mental_health/
+│   ├── mental_health/
 │   │   └── osmi_survey.csv
-│   └── 📁 sleep/
+│   └── sleep/
 │       └── sleep_lifestyle.csv
-│
-├── 📁 docs/                             # This documentation folder
-│   ├── README.md                        # ← You are here
+├── docs/                             # Documentation folder
+│   ├── README.md                     # ← You are here
 │   ├── PRD.md
 │   ├── TRD.md
 │   ├── THEORY.md
@@ -143,17 +132,16 @@ HealthAI/
 │   ├── AI_Personality.md
 │   ├── AI_MentalHealth.md
 │   └── AI_SleepHealth.md
-│
-├── .env                                 # Environment variables (gitignored)
+├── .env                              # Environment variables (gitignored)
 ├── .gitignore
-├── docker-compose.yml                   # Multi-container orchestration
-├── README.md                            # Root project README
-└── idea.md                              # Original project roadmap document
+├── docker-compose.yml                # Multi-container orchestration
+├── README.md                         # Root project README
+└── idea.md                           # Original project roadmap document
 ```
 
 ---
 
-## 🎨 High-Level Architecture Diagram
+## 🎨 High-Level Architecture
 
 ```mermaid
 graph TD
@@ -213,7 +201,7 @@ graph TD
 
 ---
 
-## 📋 Kanban Board — Current Development Status
+## 📋 Development Status
 
 ```mermaid
 flowchart LR
@@ -246,6 +234,3 @@ flowchart LR
 
 > [!TIP]
 > Model `.pkl` files are committed to Git using **Git LFS** to track binary files efficiently.
-#   H e a l t h C a r e - M o d e l 
- 
- 

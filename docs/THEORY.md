@@ -1,10 +1,24 @@
 # 📖 Theory, Libraries & Scientific Foundation — HealthAI India
 
-This document is the **complete scientific backbone** of the HealthAI India platform. It covers the mathematics of every algorithm used, the OOP class structure, the full database ERD, preprocessing theory, evaluation metrics, Supabase integration theory, and all libraries with usage patterns.
+This document serves as the **complete scientific backbone** of the HealthAI India platform. It covers the mathematics of every algorithm used, the OOP class structure, the database ERD, preprocessing theory, evaluation metrics, Supabase integration theory, the geographical HealthAI ID generation scheme, the three-stage machine learning evolution theory, and all libraries with usage patterns.
 
 ---
 
-## 📚 1. Machine Learning Algorithms & Mathematical Foundations
+## 📌 Table of Contents
+
+1. [Machine Learning Algorithms & Mathematical Foundations](#1-machine-learning-algorithms--mathematical-foundations)
+2. [Model Algorithm Benchmarks & Evaluation Theory](#2-model-algorithm-benchmarks--evaluation-theory)
+3. [HealthAI Identity & Authentication Security Theory](#3-healthai-identity--authentication-security-theory)
+4. [Class Diagram — Complete OOP Architecture](#4-class-diagram--complete-oop-architecture)
+5. [Complete Database Entity Relationship Diagram (ERD)](#5-complete-database-entity-relationship-diagram-erd)
+6. [Multi-Layer Event Modeling](#6-multi-layer-event-modeling)
+7. [Supabase Integration & RLS Policy Theory](#7-supabase-integration--rls-policy-theory)
+8. [Three-Stage Machine Learning Evolution Theory](#8-three-stage-machine-learning-evolution-theory)
+9. [Complete Library & Package Reference](#9-complete-library--package-reference)
+
+---
+
+## 1. Machine Learning Algorithms & Mathematical Foundations
 
 ### 1.1 Logistic Regression
 
@@ -28,7 +42,7 @@ $$\theta_j := \theta_j - \alpha \frac{\partial J}{\partial \theta_j} = \theta_j 
 
 $$J_{reg}(\theta) = J(\theta) + \frac{\lambda}{2m} \sum_{j=1}^{n} \theta_j^2$$
 
-**Hyperparameters used**: `C=1.0` (inverse regularization), `solver='lbfgs'`, `max_iter=1000`
+**Hyperparameters**: `C=1.0` (inverse regularization strength), `solver='lbfgs'`, `max_iter=1000`
 
 ---
 
@@ -59,7 +73,6 @@ $$IG(t, A) = H(t) - \sum_{v \in \text{values}(A)} \frac{|S_v|}{|S|} H(S_v)$$
 Random Forest builds $B$ decision trees using:
 
 1. **Bootstrap Aggregation (Bagging)**: Each tree $T_b$ is trained on $D_b$ — a bootstrap sample of $n$ data points drawn with replacement from the original dataset.
-
 2. **Feature Subspace Sampling**: At each split, only $m = \lfloor\sqrt{p}\rfloor$ features are considered (where $p$ = total features), ensuring decorrelated trees.
 
 **Final Prediction (Majority Voting)**:
@@ -104,7 +117,7 @@ Where $T$ = number of leaves, $w_j$ = leaf weights. $\gamma$ penalizes extra lea
 
 $$w_j^* = -\frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j} h_i + \lambda}$$
 
-**Hyperparameters**: `n_estimators=300`, `max_depth=6`, `learning_rate=0.05`, `subsample=0.8`, `colsample_bytree=0.8`, `use_label_encoder=False`, `eval_metric='logloss'`
+**Hyperparameters**: `n_estimators=300`, `max_depth=6`, `learning_rate=0.05`, `subsample=0.8`, `colsample_bytree=0.8`
 
 ---
 
@@ -143,8 +156,6 @@ $$J = \sum_{k=1}^{K} \sum_{x_i \in C_k} \| x_i - \mu_k \|^2$$
 3. **Update Step**: $\mu_k = \frac{1}{|C_k|} \sum_{x_i \in C_k} x_i$
 4. Repeat until convergence ($\Delta J < \epsilon$)
 
-**Choosing K**: Elbow method — plot $J$ vs $K$, choose the elbow point (K=4 for OCEAN archetypes).
-
 **Silhouette Score** (validation):
 
 $$s(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}}$$
@@ -161,9 +172,7 @@ For a missing feature $x_j$ in sample $i$, KNN Imputer:
 1. Finds the $K$ nearest non-missing neighbors using **Euclidean distance on non-missing features**
 2. Imputes: $\hat{x}_{ij} = \frac{1}{K} \sum_{k \in \mathcal{N}(i)} x_{kj}$
 
-**Distance metric used**: $d(a, b) = \sqrt{\sum_{f \in F_{obs}} (a_f - b_f)^2}$ where $F_{obs}$ = observed (non-missing) features.
-
-**Parameters**: `n_neighbors=5`, `weights='uniform'`
+**Distance metric**: $d(a, b) = \sqrt{\sum_{f \in F_{obs}} (a_f - b_f)^2}$ where $F_{obs}$ = observed (non-missing) features.
 
 ---
 
@@ -177,56 +186,56 @@ $$x_{new} = x_i + \delta \cdot (x_{nn} - x_i), \quad \delta \sim \text{Uniform}(
 
 Where $x_{nn}$ is a randomly selected K-nearest neighbor of $x_i$ from the minority class.
 
-**Applied only during training** — production inference uses the trained model directly on unmodified input.
-
 ---
 
 ### 1.9 Feature Scaling
 
-**MinMaxScaler** (used for Diabetes — bounded clinical features):
+**MinMaxScaler** (used for Diabetes):
 
 $$x_{scaled} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
 
-**StandardScaler** (used for Heart, Stroke, Mental Health, Sleep — normally distributed features):
+**StandardScaler** (used for Heart, Stroke, Mental Health, Sleep):
 
 $$x_{scaled} = \frac{x - \mu}{\sigma}$$
 
-Both scalers are **fit on training data only** and saved alongside the `.pkl` model file. At inference, only `transform()` is called (never `fit_transform()`).
+---
+
+## 2. Model Algorithm Benchmarks & Evaluation Theory
+
+### 2.1 Model Evaluation Metrics
+
+* **Accuracy**: $\frac{TP + TN}{TP + TN + FP + FN}$ (fraction of correct predictions).
+* **Precision**: $\frac{TP}{TP + FP}$ (of predicted positive, how many are truly positive).
+* **Recall (Sensitivity)**: $\frac{TP}{TP + FN}$ (of actual positive, how many were caught). Critical for Stroke prediction.
+* **F1-Score**: $\frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$ (harmonic mean of precision and recall).
+* **ROC-AUC**: Integral of the True Positive Rate vs False Positive Rate. Measures model classification threshold quality.
 
 ---
 
-## 📊 2. Model Algorithm Benchmarks
+## 3. HealthAI Identity & Authentication Security Theory
 
-### 2.1 Cross-Model F1-Score Comparison
+HealthAI India integrates a state-of-the-art geographical health tracking schema to map health vectors in India.
 
-```mermaid
-xychart-beta
-    title "Algorithm Benchmark: Weighted F1-Score Across All Disease Models"
-    x-axis ["LogReg", "DecTree", "RandForest", "XGBoost", "LightGBM"]
-    y-axis "Weighted F1-Score" 0.60 --> 0.95
-    bar [0.78, 0.71, 0.85, 0.91, 0.89]
-    line [0.78, 0.71, 0.85, 0.91, 0.89]
-```
+### 3.1 HealthAI ID String Representation Theory
+The HealthAI ID is a structured, permanent string that maps a patient's geographical location at the time of signup to a unique sequential database record:
 
-### 2.2 Model Evaluation Metrics — Full Mathematical Reference
+$$\text{HealthAI ID} = \text{StateCode} - \text{DistrictCode} - \text{CityCode} - \text{Sequence}$$
 
-**Confusion Matrix Definitions**:
+* **StateCode** (2 Characters): Representing Indian State ISO standards (e.g. `WB`, `KA`, `MH`).
+* **DistrictCode** (2 Digits): Representing district classification.
+* **CityCode** (4 Digits): Representing postal/municipal classification.
+* **Sequence** (5 Characters): Sequential user identifier generated dynamically by backend.
 
-| Metric | Formula | Clinical Meaning |
-|:---|:---|:---|
-| **Accuracy** | $\frac{TP + TN}{TP + TN + FP + FN}$ | Overall correct predictions |
-| **Precision** | $\frac{TP}{TP + FP}$ | Of predicted positives, how many are truly positive |
-| **Recall (Sensitivity)** | $\frac{TP}{TP + FN}$ | Of actual positives, how many were caught (critical for Stroke) |
-| **Specificity** | $\frac{TN}{TN + FP}$ | Of actual negatives, how many were correctly identified |
-| **F1-Score** | $\frac{2 \cdot P \cdot R}{P + R}$ | Harmonic mean of Precision & Recall |
-| **ROC-AUC** | $\int_0^1 TPR(FPR^{-1}(t)) dt$ | Area under TPR vs FPR curve; 1.0 = perfect |
-| **MCC** | $\frac{TP \cdot TN - FP \cdot FN}{\sqrt{(TP+FP)(TP+FN)(TN+FP)(TN+FN)}}$ | Best metric for imbalanced datasets |
+*Note: The specific codebooks, locking mechanisms, and caching rules for multi-tenant high-throughput sequencing will be developed later.*
+
+### 3.2 Authentication Protocol
+* **Primary Identity Vector**: Phone number. Email address and usernames are disabled to prevent credential leakage and match Indian population usage.
+* **Hashed Credentials**: Passwords are encrypted using Argon2id or bcrypt within the Supabase Auth system.
+* **JWT Access Control**: Client requests pass standard JWTs. The backend decrypts and extracts `user_id` to run RLS policies.
 
 ---
 
-## 🗂️ 3. Class Diagram — Complete OOP Architecture
-
-The platform's Python classes follow a strict inheritance and composition pattern to maximize reusability and testability.
+## 4. Class Diagram — Complete OOP Architecture
 
 ```mermaid
 classDiagram
@@ -242,7 +251,6 @@ classDiagram
         +validate_input(dict raw) bool
         +preprocess(dict raw) ndarray
         +predict(dict raw) dict
-        +get_feature_importance() dict
     }
 
     class DiabetesPipeline {
@@ -266,110 +274,50 @@ classDiagram
         +float threshold
         +preprocess(dict raw) ndarray
         +predict(dict raw) dict
-        +_apply_threshold(float prob) int
     }
 
     class PersonalityPipeline {
         +KMeans cluster_model
-        +dict archetype_map
         +compute_ocean_scores(dict tipi) dict
         +predict(dict raw) dict
-        +_reverse_code(int score) int
-    }
-
-    class MentalHealthPipeline {
-        +StandardScaler scaler
-        +LabelEncoder encoder
-        +preprocess(dict raw) ndarray
-        +predict(dict raw) dict
-    }
-
-    class SleepHealthPipeline {
-        +StandardScaler scaler
-        +OneHotEncoder encoder
-        +preprocess(dict raw) ndarray
-        +predict(dict raw) dict
-        +_parse_blood_pressure(str bp) tuple
     }
 
     class SupabaseSyncManager {
         +Client client
-        +str supabase_url
-        +str supabase_key
         +connect() void
         +save_prediction(str uid, str model, dict inputs, float prob, int label) str
         +save_disease_record(str table, str pred_id, dict data) void
         +save_feedback(str pred_id, bool correct, str notes) void
-        +check_consent(str uid) bool
         +get_user_history(str uid, str model_type) list
-    }
-
-    class ConsentManager {
-        +SupabaseSyncManager db
-        +check_consent(str uid) bool
-        +log_consent(str uid, bool given) void
-        +revoke_consent(str uid) void
-    }
-
-    class PredictionRouter {
-        +DiabetesPipeline diabetes
-        +HeartDiseasePipeline heart
-        +StrokePipeline stroke
-        +PersonalityPipeline personality
-        +MentalHealthPipeline mental
-        +SleepHealthPipeline sleep
-        +SupabaseSyncManager db
-        +route(str model_type, dict data, str uid) dict
     }
 
     BaseModelPipeline <|-- DiabetesPipeline
     BaseModelPipeline <|-- HeartDiseasePipeline
     BaseModelPipeline <|-- StrokePipeline
     BaseModelPipeline <|-- PersonalityPipeline
-    BaseModelPipeline <|-- MentalHealthPipeline
-    BaseModelPipeline <|-- SleepHealthPipeline
-
-    PredictionRouter *-- DiabetesPipeline
-    PredictionRouter *-- HeartDiseasePipeline
-    PredictionRouter *-- StrokePipeline
-    PredictionRouter *-- PersonalityPipeline
-    PredictionRouter *-- MentalHealthPipeline
-    PredictionRouter *-- SleepHealthPipeline
-    PredictionRouter *-- SupabaseSyncManager
-
-    DiabetesPipeline ..> SupabaseSyncManager : uses
-    HeartDiseasePipeline ..> SupabaseSyncManager : uses
-    StrokePipeline ..> SupabaseSyncManager : uses
-    PersonalityPipeline ..> SupabaseSyncManager : uses
-    MentalHealthPipeline ..> SupabaseSyncManager : uses
-    SleepHealthPipeline ..> SupabaseSyncManager : uses
-    ConsentManager *-- SupabaseSyncManager
 ```
 
 ---
 
-## 🗄️ 4. Complete Database Entity Relationship Diagram (ERD)
-
-Full Supabase PostgreSQL schema covering all 6 disease models, consent management, and feedback:
+## 5. Complete Database Entity Relationship Diagram (ERD)
 
 ```mermaid
 erDiagram
     users {
         uuid id PK
-        string email UK
-        string hashed_password
+        string phone_number UK
+        string encrypted_password
         timestamp created_at
-        timestamp updated_at
     }
     user_profiles {
         uuid id PK
         uuid user_id FK
         string full_name
-        string gender
         date birth_date
-        float height_cm
-        float weight_kg
-        string phone_number
+        string state_code
+        string district_code
+        string city_code
+        string healthai_id UK
         timestamp created_at
     }
     predictions {
@@ -378,267 +326,99 @@ erDiagram
         string disease_type
         float risk_probability
         int prediction_label
-        string risk_category
         timestamp created_at
     }
     feedback {
         uuid id PK
         uuid prediction_id FK
         boolean is_correct
-        string user_comments
-        int confidence_rating
+        string comments
         timestamp created_at
     }
     consent_logs {
         uuid id PK
         uuid user_id FK
         boolean consent_given
-        string consent_version
         timestamp granted_at
-        timestamp updated_at
     }
     diabetes_records {
         uuid id PK
         uuid prediction_id FK
-        int pregnancies
         float glucose
         float blood_pressure
         float skin_thickness
         float insulin
         float bmi
-        float pedigree_function
+        float pedigree
         int age
-    }
-    heart_records {
-        uuid id PK
-        uuid prediction_id FK
-        int age
-        int sex
-        int chest_pain_type
-        float resting_bp
-        float cholesterol
-        int fasting_blood_sugar
-        int rest_ecg
-        float max_heart_rate
-        int exercise_angina
-        float oldpeak
-        int st_slope
-        int vessels_colored
-        int thalassemia
-    }
-    stroke_records {
-        uuid id PK
-        uuid prediction_id FK
-        string gender
-        float age
-        int hypertension
-        int heart_disease
-        string ever_married
-        string work_type
-        string residence_type
-        float avg_glucose_level
-        float bmi
-        string smoking_status
-    }
-    personality_records {
-        uuid id PK
-        uuid prediction_id FK
-        int tipi_1
-        int tipi_2
-        int tipi_3
-        int tipi_4
-        int tipi_5
-        int tipi_6
-        int tipi_7
-        int tipi_8
-        int tipi_9
-        int tipi_10
-        float score_openness
-        float score_conscientiousness
-        float score_extraversion
-        float score_agreeableness
-        float score_neuroticism
-        string personality_archetype
-    }
-    mental_health_records {
-        uuid id PK
-        uuid prediction_id FK
-        int family_history
-        string work_interfere
-        string benefits
-        string care_options
-        string wellness_program
-        string seek_help
-        string anonymity
-        string medical_leave
-        string mental_consequence
-    }
-    sleep_records {
-        uuid id PK
-        uuid prediction_id FK
-        string gender
-        int age
-        string occupation
-        float sleep_duration
-        int quality_of_sleep
-        int physical_activity_level
-        int stress_level
-        string bmi_category
-        int systolic_bp
-        int diastolic_bp
-        int heart_rate
-        int daily_steps
-        string predicted_disorder
     }
 
-    users ||--|| user_profiles : "has one"
-    users ||--o{ predictions : "makes many"
-    users ||--|| consent_logs : "grants one"
+    users ||--|| user_profiles : "profile"
+    users ||--o{ predictions : "registers"
+    users ||--|| consent_logs : "grants"
     predictions ||--o| feedback : "receives"
-    predictions ||--o| diabetes_records : "detailed in"
-    predictions ||--o| heart_records : "detailed in"
-    predictions ||--o| stroke_records : "detailed in"
-    predictions ||--o| personality_records : "detailed in"
-    predictions ||--o| mental_health_records : "detailed in"
-    predictions ||--o| sleep_records : "detailed in"
+    predictions ||--o| diabetes_records : "details"
 ```
 
 ---
 
-## 🔄 5. Multi-Layer Event Modeling
+## 6. Multi-Layer Event Modeling
 
-A complete 4-layer event propagation model from browser interaction to Supabase commit:
+1. **User UI Layer**: Registers location details and phone. Frontend requests signup.
+2. **Backend Auth Layer**: Verifies inputs, calls the ID Generator module, creates the Supabase Profile.
+3. **ML Inference Layer**: Validates request body, transforms inputs (e.g. calculates BMI), executes predictions, returns scores.
+4. **Database Persist Layer**: The backend triggers database INSERTs to `predictions` and the corresponding disease table (e.g. `diabetes_records`).
+
+---
+
+## 7. Supabase Integration & RLS Policy Theory
+
+To maintain security, the database implements strict Row Level Security (RLS). 
+
+$$\text{Policy Check} \implies \text{auth.uid()} = \text{user_id}$$
+
+Every SELECT, UPDATE, or INSERT query is authorized against the active JWT token supplied in the HTTP header, preventing cross-user data leakage.
+
+---
+
+## 8. Three-Stage Machine Learning Evolution Theory
+
+HealthAI India scales its intelligence in three distinct waves:
 
 ```mermaid
-flowchart TD
-    subgraph L1 ["🖥️ Layer 1 — Browser / Streamlit UI Events"]
-        E1["User Opens Platform URL"] --> E2["Streamlit App Initializes session_state"]
-        E2 --> E3{Logged In?}
-        E3 -- No --> E4["Show Login / Register Form"]
-        E3 -- Yes --> E5["Render Disease Selection Dashboard"]
-        E4 --> E6["User Submits Auth Credentials"]
-        E5 --> E7["User Selects a Disease Module"]
-        E7 --> E8["Form Widgets Rendered: sliders, selects, numbers"]
-        E8 --> E9["User Fills All Fields"]
-        E9 --> E10["Submit Button Clicked"]
-        E10 --> E11["Client-Side Validation: Required fields check"]
+graph TD
+    subgraph Stage1 ["Stage 1 — Traditional ML (MVP)"]
+        A["Tabular Classifiers"] --> B["Low-latency, highly interpretative algorithms (XGBoost, RF, LightGBM)"]
     end
-
-    subgraph L2 ["⚙️ Layer 2 — FastAPI Backend Processing"]
-        A1["Receive HTTP POST /api/predict/model_name"] --> A2["JWT Token Verification via Supabase Auth"]
-        A2 --> A3{Token Valid?}
-        A3 -- No --> A4["Return 401 Unauthorized"]
-        A3 -- Yes --> A5["Parse Pydantic Request Schema"]
-        A5 --> A6["Fetch Model Pipeline from Cache"]
-        A6 --> A7["Run Preprocessing: Imputation + Encoding + Scaling"]
-        A7 --> A8["Execute model.predict_proba(X)"]
-        A8 --> A9["Apply Decision Threshold"]
-        A9 --> A10["Build Response Payload with risk_probability + label"]
-        A10 --> A11["Trigger DB Save Coroutine"]
+    subgraph Stage2 ["Stage 2 — Open Source AI (Intermediate)"]
+        C["Local Large Language Models"] --> D["Narrative explanations and QA via Gemma, Llama, Mistral, Phi"]
     end
-
-    subgraph L3 ["🗄️ Layer 3 — Supabase Database Transactions"]
-        D1["Check user consent_logs"] --> D2{Consent Given?}
-        D2 -- No --> D3["Skip Disease Record Insert; Only log prediction"]
-        D2 -- Yes --> D4["INSERT INTO predictions table"]
-        D4 --> D5["INSERT INTO disease-specific record table"]
-        D5 --> D6["INSERT INTO consent_logs if first time"]
-        D3 --> D7["Return prediction_id to API"]
-        D6 --> D7
+    subgraph Stage3 ["Stage 3 — Made in India AI (Long-Term)"]
+        E["Sovereign Healthcare Ecosystem"] --> F["Indigenous Medical LLMs, RAG engines using ICMR Guidelines"]
     end
-
-    subgraph L4 ["🤖 Layer 4 — LLM Explainability (Optional)"]
-        X1["Receive prediction_id + risk_data"] --> X2["Fetch user health history from Supabase"]
-        X2 --> X3["Build RAG Prompt with context + clinical guidelines"]
-        X3 --> X4["Stream response from Gemma/Llama model"]
-        X4 --> X5["Return markdown health report to Streamlit"]
-    end
-
-    E11 --> |"HTTP POST + Bearer Token"| A1
-    E6 --> |"POST /auth/login"| A2
-    A11 --> D1
-    D7 --> |"Return record_id"| A10
-    A10 --> |"Render prediction card"| E5
-    A10 --> |"Optional: Request explanation"| X1
+    Stage1 --> Stage2
+    Stage2 --> Stage3
 ```
+
+### Stage 1 — Traditional Machine Learning (MVP)
+* **Goal**: Minimize false negatives and false positives on structural tabular data.
+* **Why**: Clinicians require exact, auditable risk calculations. Tabular algorithms (such as XGBoost and Random Forests) provide exact mathematical feature importances and risk probabilities with negligible compute requirements.
+
+### Stage 2 — Open Source AI (Intermediate)
+* **Goal**: Provide patients with clinical explanations of their predictions.
+* **Why**: Traditional ML probabilities (e.g. "76.4% risk") can create patient anxiety. Fine-tuned open-source generative models (Gemma, Llama, Mistral, Phi) translate vectors and feature weights into plain language summaries and suggest preventative lifestyle modifications. They act strictly as communication layers, leaving the core prediction to the Stage 1 models.
+
+### Stage 3 — Made in India AI (Long-Term sovereign research vision)
+* **Goal**: Build a sovereign healthcare model trained on local Indian patient populations, guidelines, and languages.
+* **Why**: Foreign medical LLMs are trained primarily on Western cohorts, presenting a demographic bias. Stage 3 builds local clinical datasets, RAG indexers based on ICMR guidelines, and multi-lingual translators to bring AI healthcare to every citizen in their native tongue.
 
 ---
 
-## 🧠 6. Supabase Integration Theory
+## 9. Complete Library & Package Reference
 
-### 6.1 Row Level Security (RLS) Architecture
-
-Supabase RLS uses PostgreSQL's native policy engine. Every table has:
-
-```sql
--- Enable RLS
-ALTER TABLE predictions ENABLE ROW LEVEL SECURITY;
-
--- SELECT: Users can only see their own rows
-CREATE POLICY "user_select_own" ON predictions
-  FOR SELECT USING (user_id = auth.uid());
-
--- INSERT: Users can only insert their own rows
-CREATE POLICY "user_insert_own" ON predictions
-  FOR INSERT WITH CHECK (user_id = auth.uid());
-```
-
-`auth.uid()` resolves the user UUID from the **JWT Bearer token** sent with each API call, making it impossible for User A to read User B's records even with direct SQL access.
-
-### 6.2 Supabase Python Client Pattern
-
-```python
-from supabase import create_client, Client
-
-# Initialize once at app startup
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# Authenticated request using user JWT
-def save_prediction(user_jwt: str, data: dict) -> str:
-    client = create_client(SUPABASE_URL, SUPABASE_KEY)
-    client.auth.set_session(access_token=user_jwt, refresh_token="")
-    result = client.table("predictions").insert(data).execute()
-    return result.data[0]["id"]
-```
-
-### 6.3 Continuous Learning Data Flywheel
-
-Every user interaction feeds back into the system:
-
-```mermaid
-flowchart LR
-    User["User Submits Prediction"] --> Prediction["ML Model Runs Inference"]
-    Prediction --> Store["Save to Supabase predictions + records"]
-    Store --> Feedback["User Provides Feedback: Correct / Wrong"]
-    Feedback --> FeedbackStore["Save to feedback table"]
-    FeedbackStore --> Aggregate["Cron Job: Weekly aggregation of verified feedback"]
-    Aggregate --> Retrain["Retrain model on original + verified user data"]
-    Retrain --> Deploy["Replace model.pkl with new version"]
-    Deploy --> Prediction
-```
-
----
-
-## 🛠️ 7. Complete Library & Package Reference
-
-| Package | Version | Purpose | Key APIs Used |
-|:---|:---:|:---|:---|
-| `scikit-learn` | 1.3.x | ML pipelines, preprocessing, baseline models | `RandomForestClassifier`, `LogisticRegression`, `MinMaxScaler`, `StandardScaler`, `KNNImputer`, `OneHotEncoder`, `LabelEncoder`, `KMeans`, `train_test_split`, `classification_report`, `roc_auc_score` |
-| `xgboost` | 2.0.x | Gradient boosted trees for tabular data | `XGBClassifier`, `predict_proba`, `feature_importances_`, `DMatrix` |
-| `lightgbm` | 4.1.x | Fast leaf-wise boosting for imbalanced data | `LGBMClassifier`, `is_unbalance=True`, `early_stopping`, `log_evaluation` |
-| `imbalanced-learn` | 0.11.x | SMOTE oversampling for Stroke dataset | `SMOTE`, `SMOTETomek`, `Pipeline` |
-| `joblib` | 1.3.x | Model serialization / deserialization | `dump(model, path)`, `load(path)` |
-| `pandas` | 2.1.x | Data loading, cleaning, transformation | `read_csv`, `fillna`, `get_dummies`, `DataFrame` |
-| `numpy` | 1.26.x | Numerical computation | `array`, `reshape`, `where`, `nan` |
-| `fastapi` | 0.109.x | Async REST API gateway | `FastAPI`, `APIRouter`, `Depends`, `HTTPException`, `BackgroundTasks` |
-| `pydantic` | 2.6.x | Request/response validation schemas | `BaseModel`, `Field`, `validator`, `model_validator` |
-| `uvicorn` | 0.27.x | ASGI server for FastAPI | `uvicorn.run`, `--workers`, `--reload` |
-| `supabase` | 2.3.x | Supabase DB + Auth Python client | `create_client`, `table().insert()`, `table().select()`, `auth.sign_in_with_password()`, `auth.get_user()` |
-| `python-jose` | 3.3.x | JWT decoding and verification | `jwt.decode`, `JWTError` |
-| `streamlit` | 1.31.x | Interactive frontend dashboard | `st.form`, `st.slider`, `st.selectbox`, `st.session_state`, `st.plotly_chart`, `st.spinner` |
-| `plotly` | 5.18.x | Interactive charts in Streamlit | `px.bar`, `go.Figure`, `go.Indicator` |
-| `python-dotenv` | 1.0.x | Environment variable loading | `load_dotenv`, `os.getenv` |
-| `httpx` | 0.26.x | Async HTTP client for Streamlit→FastAPI calls | `AsyncClient`, `post`, `get` |
-| `pytest` | 7.4.x | Unit and integration testing framework | `pytest.fixture`, `assert`, `monkeypatch` |
-| `pytest-asyncio` | 0.23.x | Async test support for FastAPI | `@pytest.mark.asyncio` |
-| `ollama` | 0.1.x | Local LLM inference (Gemma/Llama) | `ollama.generate`, `ollama.chat` |
+* `scikit-learn`: Random forests, baseline classifiers, escalers, and imputer engines.
+* `xgboost`: Gradient boosted decision tree frameworks.
+* `lightgbm`: Highly optimized, GOSS-based gradient boosting classifiers.
+* `supabase`: Cloud DB client interface.
+* `streamlit`: User interface construction.
+* `fastapi`: API gateway routing.

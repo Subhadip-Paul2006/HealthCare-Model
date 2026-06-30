@@ -1,69 +1,59 @@
 # 🚀 Usage & Deployment Guide — HealthAI India
 
-This guide covers local development, testing, Docker containerization, CI/CD pipelines, and production cloud deployment on Railway or Render.
+This guide covers local development setup, database migrations, testing pipelines, Docker containerization, and cloud deployment procedures for HealthAI India.
 
 ---
 
-## 🌳 1. Git Branching Strategy & Release History
+## 📌 Table of Contents
 
-HealthAI India uses a **GitFlow** branching strategy. All features are developed in isolated branches, tested, then merged into `develop` and released to `main`.
+1. [Git Branching & Release History](#-1-git-branching--release-history)
+2. [Local Development Setup](#-2-local-development-setup)
+3. [Supabase Database Configuration](#-3-supabase-database-configuration)
+4. [Testing Pipeline](#-4-testing-pipeline)
+5. [Docker Containerization](#-5-docker-containerization)
+6. [CI/CD & Cloud Deployment Pipelines](#-6-cicd--cloud-deployment-pipelines)
+
+---
+
+## 🌳 1. Git Branching & Release History
+
+HealthAI India uses **GitFlow** branching. Development happens on feature branches, merges into `develop`, and releases into `main`.
 
 ```mermaid
 gitGraph
-    commit id: "init: project scaffold"
-    commit id: "docs: add idea.md roadmap"
+    commit id: "init: scaffold"
+    commit id: "docs: update sovereign vision"
 
     branch develop
     checkout develop
-    commit id: "feat: Supabase schema SQL"
-    commit id: "feat: auth routes (login/register)"
-    commit id: "test: auth unit tests pass"
-
+    commit id: "feat: database tables SQL"
+    commit id: "feat: phone signup & login API"
+    commit id: "feat: HealthAI ID generator"
+    
     branch feature/diabetes-model
     checkout feature/diabetes-model
-    commit id: "data: PIMA EDA notebook"
-    commit id: "feat: XGBoost training pipeline"
-    commit id: "feat: diabetes_pipeline.py class"
-    commit id: "feat: POST /predict/diabetes route"
-    commit id: "feat: Streamlit diabetes form UI"
-    commit id: "test: diabetes integration tests"
+    commit id: "feat: train XGBoost Diabetes"
+    commit id: "feat: diabetes FastAPI route"
+    commit id: "feat: diabetes Streamlit form"
     checkout develop
-    merge feature/diabetes-model id: "merge: diabetes AI complete"
-    commit id: "fix: MinMaxScaler fit on train only"
+    merge feature/diabetes-model id: "merge: diabetes model"
 
+    checkout main
+    merge develop tag: "v1.0.0-Stage1"
+    commit id: "release: v1.0.0 Diabetes"
+    
+    checkout develop
     branch feature/heart-model
     checkout feature/heart-model
-    commit id: "data: Cleveland dataset EDA"
-    commit id: "feat: RandomForest heart pipeline"
-    commit id: "feat: POST /predict/heart route"
-    commit id: "feat: Streamlit heart form UI"
+    commit id: "feat: train RF Heart"
+    commit id: "feat: heart FastAPI route"
+    commit id: "feat: heart Streamlit page"
     checkout develop
-    merge feature/heart-model id: "merge: heart disease AI complete"
+    merge feature/heart-model id: "merge: heart model"
 
     checkout main
-    merge develop tag: "v1.0.0-milestone-2"
-    commit id: "release: v1.0.0 Diabetes + Heart"
-
-    checkout develop
-    branch feature/stroke-model
-    checkout feature/stroke-model
-    commit id: "data: SMOTE rebalancing notebook"
-    commit id: "feat: LightGBM stroke pipeline"
-    commit id: "feat: threshold=0.35 for recall"
-    checkout develop
-    merge feature/stroke-model id: "merge: stroke AI complete"
-
-    branch feature/llm-assistant
-    checkout feature/llm-assistant
-    commit id: "feat: Ollama + Gemma integration"
-    commit id: "feat: RAG prompt builder"
-    commit id: "feat: streaming /explain endpoint"
-    checkout develop
-    merge feature/llm-assistant id: "merge: LLM assistant ready"
-
-    checkout main
-    merge develop tag: "v2.0.0-milestone-6"
-    commit id: "release: v2.0.0 Full Platform"
+    merge develop tag: "v2.0.0-Stage2"
+    commit id: "release: v2.0.0 Diabetes + Heart"
 ```
 
 ---
@@ -71,173 +61,99 @@ gitGraph
 ## 🛠️ 2. Local Development Setup
 
 ### Prerequisites
-- Python 3.10+
-- pip + virtualenv
-- A [Supabase](https://supabase.com) project (free tier works)
-- [Ollama](https://ollama.ai) installed for local LLM (optional)
+* Python 3.10+
+* [Supabase](https://supabase.com) Project (with API keys and database URL)
+* Git + LFS (for ML model binaries)
 
-### Step 1 — Clone & Configure Environment
-
+### Step 1 — Clone and Environment Variables
+Clone the repository:
 ```bash
 git clone https://github.com/your-org/HealthAI.git
 cd HealthAI
 ```
 
 Create a `.env` file in the project root:
-
 ```env
-# Supabase Config
+# Supabase Configuration
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 
-# FastAPI Config
+# FastAPI Configuration
 JWT_SECRET=your-supabase-jwt-secret
 FASTAPI_URL=http://localhost:8000
-
-# LLM Config (optional)
-OLLAMA_URL=http://localhost:11434
-LLM_MODEL=gemma:7b
 ```
 
-### Step 2 — Set Up Supabase Database
-
-```bash
-# Run SQL migrations in Supabase SQL Editor (in order):
-# 1. database/01_users.sql
-# 2. database/02_predictions.sql
-# 3. database/03_disease_records.sql
-# 4. database/04_feedback.sql
-# 5. database/05_rls_policies.sql
-```
-
-### Step 3 — Install Backend & Run FastAPI
-
+### Step 2 — Run Backend Server (FastAPI)
 ```bash
 cd backend
 python -m venv venv
-# Windows:
+# On Windows:
 venv\Scripts\activate
-# Linux/Mac:
+# On Linux/macOS:
 source venv/bin/activate
 
 pip install -r requirements.txt
-
-# Start server with auto-reload
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
+Interactive API documentation is available at: `http://localhost:8000/docs`
 
-FastAPI interactive docs available at: `http://localhost:8000/docs`
-
-### Step 4 — Install Frontend & Run Streamlit
-
+### Step 3 — Run Frontend Client (Streamlit)
 ```bash
-# Open a second terminal
+# Open a new terminal window
 cd frontend
 python -m venv venv
-venv\Scripts\activate  # Windows
+# On Windows:
+venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
 
 pip install -r requirements.txt
-
 streamlit run app.py
 ```
-
-Streamlit app available at: `http://localhost:8501`
-
-### Step 5 — Pull & Run Local LLM (Optional)
-
-```bash
-# Install Ollama from https://ollama.ai then:
-ollama pull gemma:7b
-ollama serve
-# Runs at http://localhost:11434
-```
+Access the web dashboard at: `http://localhost:8501`
 
 ---
 
-## 🧪 3. Testing Pipeline
+## 🗄️ 3. Supabase Database Configuration
 
-```mermaid
-flowchart LR
-    subgraph UnitTests ["🧪 Unit Tests (pytest)"]
-        T1["test_diabetes.py\npreprocessing + prediction logic"]
-        T2["test_heart.py\nOne-hot encoding validation"]
-        T3["test_auth.py\nJWT decode + user profile"]
-    end
+Run the SQL migration scripts in your Supabase SQL Editor in the following order:
 
-    subgraph IntegTests ["🔗 Integration Tests (pytest + httpx)"]
-        I1["test_api_diabetes.py\nFull POST /predict/diabetes"]
-        I2["test_api_feedback.py\nFull POST /feedback"]
-        I3["test_supabase_sync.py\nDB insert + RLS check"]
-    end
+1. **`database/01_users.sql`**: Setup of the standard authentication tables, user profiles table, location mappings, and unique HealthAI ID constraints.
+2. **`database/02_predictions.sql`**: Setup of the general prediction logging structures and user consent logs.
+3. **`database/03_disease_records.sql`**: Schema for the 6 disease-specific clinical record tables:
+   * `diabetes_records`
+   * `heart_records`
+   * `stroke_records`
+   * `personality_records`
+   * `mental_health_records`
+   * `sleep_records`
+4. **`database/04_feedback.sql`**: Schema for user feedback classification logs.
+5. **`database/05_rls_policies.sql`**: Configures PostgreSQL Row Level Security (RLS) policies enforcing `user_id = auth.uid()` on all records, restricting access strictly to authenticated profile owners.
 
-    subgraph E2ETests ["🌐 E2E Tests (Playwright)"]
-        E1["test_login_flow.py\nFull login → predict → view history"]
-    end
+---
 
-    T1 & T2 & T3 --> |"pytest -v backend/tests/"| Results["Coverage Report"]
-    I1 & I2 & I3 --> Results
-    E1 --> Results
-```
+## 🧪 4. Testing Pipeline
 
-Run tests:
+Tests are divided into unit, integration, and E2E suites:
 
 ```bash
-# Unit + integration tests
+# Run backend test suite
 cd backend
-pytest tests/ -v --cov=. --cov-report=html
-
-# View coverage report
-open htmlcov/index.html
+pytest tests/ -v --cov=.
 ```
+
+* **Unit Tests**: Check local data preprocess operations, scaler transformations, and imputation.
+* **Integration Tests**: Verify authentication middleware validations, signup API requests, profile registration outputs, and FastAPI route responses.
+* **E2E Tests**: Test full registration workflows (location selection -> phone confirmation -> HealthAI ID generation -> login -> prediction submission -> dashboard updates).
 
 ---
 
-## 🐳 4. Docker Containerization
+## 🐳 5. Docker Containerization
 
-### Backend Dockerfile (`backend/Dockerfile`)
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Install dependencies first (layer caching)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy models directory (large files via Git LFS)
-COPY ../models/ /app/models/
-
-# Copy app source
-COPY . .
-
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
-```
-
-### Frontend Dockerfile (`frontend/Dockerfile`)
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8501
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
-CMD ["streamlit", "run", "app.py", \
-     "--server.port=8501", \
-     "--server.address=0.0.0.0", \
-     "--server.headless=true"]
-```
+To run the full stack locally via Docker containers:
 
 ### Multi-Container Orchestration (`docker-compose.yml`)
-
 ```yaml
 version: '3.8'
 
@@ -253,11 +169,8 @@ services:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
       - JWT_SECRET=${JWT_SECRET}
-      - OLLAMA_URL=http://ollama:11434
     volumes:
       - ./models:/app/models:ro
-    depends_on:
-      - ollama
     restart: unless-stopped
 
   frontend:
@@ -274,85 +187,27 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-  ollama:
-    image: ollama/ollama:latest
-    container_name: healthai-ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    restart: unless-stopped
-
-volumes:
-  ollama_data:
 ```
 
+Build and run:
 ```bash
-# Build and launch all services
 docker-compose up --build -d
-
-# Pull the LLM model into the ollama container
-docker exec healthai-ollama ollama pull gemma:7b
-
-# View logs
-docker-compose logs -f backend
 ```
 
 ---
 
-## ☁️ 5. CI/CD & Cloud Deployment Pipeline
+## ☁️ 6. CI/CD & Cloud Deployment Pipelines
 
-```mermaid
-flowchart TD
-    subgraph Dev ["👨‍💻 Developer Workstation"]
-        Code["Write Feature Code"] --> LocalTest["Run pytest locally"]
-        LocalTest --> GitPush["git push origin feature/xyz"]
-    end
+### CI/CD Pipeline (GitHub Actions)
+On every pull request to `develop` or push to `main`, the CI workflow:
+1. Installs Python dependencies.
+2. Lints code using `flake8`.
+3. Executes unit and integration tests.
+4. Builds Docker images and publishes them to the registry.
 
-    subgraph GitHub ["📦 GitHub Repository"]
-        PR["Open Pull Request to develop"] --> Review["Code Review"]
-        Review --> Merge["Merge to develop"]
-        Merge --> MainMerge["Merge develop to main\n(Tag release)"]
-    end
-
-    subgraph CI ["⚙️ GitHub Actions CI Pipeline"]
-        Trigger["On push to main"] --> Lint["flake8 linting"]
-        Lint --> UnitTest["pytest unit tests"]
-        UnitTest --> IntTest["pytest integration tests"]
-        IntTest --> DockerBuild["docker build backend + frontend"]
-        DockerBuild --> DockerPush["Push images to\nGitHub Container Registry"]
-    end
-
-    subgraph Railway ["🚂 Railway Cloud Hosting"]
-        RailBack["Backend Service\n(FastAPI Docker)"]
-        RailFront["Frontend Service\n(Streamlit Docker)"]
-        RailBack <-->|"Internal networking"| RailFront
-    end
-
-    subgraph SupabaseCloud ["🗄️ Supabase Cloud DB"]
-        SupaDB[("PostgreSQL + RLS\n+ Auth Service")]
-    end
-
-    GitPush --> PR
-    MainMerge --> Trigger
-    DockerPush --> |"Railway auto-deploys\nlatest image"| RailBack
-    DockerPush --> RailFront
-    RailBack <-->|"Supabase SDK"| SupaDB
-```
-
-### Railway Deployment Steps
-
-1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub**
-2. Add **Backend Service**: set Root Directory to `/backend`, auto-detects Dockerfile.
-3. Add **Frontend Service**: set Root Directory to `/frontend`.
-4. Set environment variables in Railway dashboard for each service.
-5. Railway auto-assigns public URLs with SSL. Copy the backend URL into the frontend's `FASTAPI_URL` variable.
-6. Enable **Auto-Deploy on push to main** in Railway settings.
-
-### Health Check Endpoints
-
-```
-GET http://your-backend-url/health
-→ {"status": "ok", "models_loaded": 6, "db_connected": true}
-```
+### Railway Deployment (Production)
+1. Link your GitHub repository in the **Railway Dashboard**.
+2. Add a service pointing to `/backend` (Railway auto-detects the Dockerfile and exposes port 8000).
+3. Add a service pointing to `/frontend` (Exposes port 8501).
+4. Configure env variables in the Railway dashboard. Set `FASTAPI_URL` of the frontend to the public backend domain generated by Railway.
+5. Deploys are triggered automatically upon pushes to the production branch.

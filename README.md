@@ -1,6 +1,5 @@
 # 🏥 HealthAI India — Documentation Portal
-
-> **Building an AI-Powered Preventive Healthcare Platform**
+**Building an AI-Powered Preventive Healthcare Platform**
 
  A modular healthcare AI platform capable of predicting 6 health conditions, storing user-consented records in Supabase, and continuously improving through user feedback.
 

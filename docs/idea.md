@@ -1,4 +1,4 @@
-# 🏥 <TBD> India — Project Idea Document
+# 🏥 HealthAI India — Project Idea Document
 
 > **Building a Made in India Healthcare AI Ecosystem**
 >
@@ -10,12 +10,12 @@
 
 1. [Problem Statement](#-problem-statement)
 2. [Why India Needs This](#-why-india-needs-this)
-3. [What HealthAI India Is](#-what-healthai-india-is)
-4. [What HealthAI India Is NOT](#-what-healthai-india-is-not)
+3. [Overall Vision: Architectural Segmentation](#-overall-vision-architectural-segmentation)
+4. [What HealthAI India Is & Is NOT](#-what-healthai-india-is--is-not)
 5. [Core Philosophy](#-core-philosophy)
-6. [Current Phase — MVP](#-current-phase--mvp)
-7. [Future Phase — AI-Powered Intelligence](#-future-phase--ai-powered-intelligence)
-8. [Long-Term Vision — Made in India AI Healthcare Stack](#-long-term-vision--made-in-india-ai-healthcare-stack)
+6. [HealthAI Identity System](#-healthai-identity-system)
+7. [Authentication & Registration Flows](#-authentication--registration-flows)
+8. [Machine Learning Roadmap (Three-Stage)](#-machine-learning-roadmap-three-stage)
 9. [Development Strategy — Incremental Integration](#-development-strategy--incremental-integration)
 10. [Repository Evolution](#-repository-evolution)
 11. [Differentiators & Impact](#-differentiators--impact)
@@ -27,15 +27,12 @@
 
 India faces a **dual healthcare crisis**:
 
-1. **Acute shortage of healthcare professionals** — India has approximately 1 doctor per 1,511 citizens (WHO recommends 1:1,000). Preventive screening is a luxury, not a standard.
-
+1. **Acute shortage of healthcare professionals** — India has approximately 1 doctor per 1,511 citizens (WHO recommends 1:1,000). Preventive screening is a luxury, not a standard, especially in rural and semi-urban areas.
 2. **Late detection of chronic diseases** — Over 77 million Indians are diabetic, yet nearly 57% remain undiagnosed. Heart disease accounts for nearly 28% of all deaths in India. Stroke incidence is rising at alarming rates among younger populations.
-
 3. **Mental health crisis in silence** — Over 197 million Indians need mental health support, yet fewer than 30 million seek or receive help. Sleep disorders and workplace burnout are escalating but remain critically underserved.
-
 4. **Dependence on foreign AI infrastructure** — Healthcare AI tools available in India are predominantly built on foreign models, foreign data, and foreign infrastructure. There is no comparable indigenous platform designed around Indian clinical guidelines, Indian epidemiological data, and Indian languages.
 
-**The gap is clear:** India needs an accessible, zero-barrier, AI-powered health screening platform that works for the common citizen — and one that is built from the ground up in India.
+**The gap is clear:** India needs an accessible, AI-powered health screening platform that combines **secure user identity** with clinical-grade predictions — and one that is built from the ground up in India.
 
 ---
 
@@ -43,355 +40,214 @@ India faces a **dual healthcare crisis**:
 
 | Factor | Current Reality in India | What This Project Addresses |
 |:---|:---|:---|
-| **Accessibility** | 65% of Indians lack access to preventive health screening | Zero-login, instant-access AI health predictions |
+| **Accessibility** | 65% of Indians lack access to preventive health screening | Free, web-based AI health predictions with simple phone-number-based registration |
 | **Affordability** | Preventive health checkups cost ₹2,000–₹8,000 | Free, open-source, web-based health assessments |
 | **Awareness** | Most Indians discover conditions at advanced stages | Early risk detection through ML-powered screening |
+| **Identity** | No unified personal health identity for common citizens | Unique HealthAI ID — a permanent healthcare identity tied to geographical location |
 | **Data Sovereignty** | Health data processed by foreign platforms | Indian-built platform storing data in Indian-hosted databases |
 | **Language** | Most health AI tools are English-only | Long-term roadmap includes Indian language support |
 | **AI Independence** | Healthcare AI is dominated by US/China | Long-term vision: indigenous Indian healthcare LLM |
 
 ---
 
-## 💡 What HealthAI India Is
+## 🗺️ Overall Vision: Architectural Segmentation
 
-HealthAI India is a **preventive healthcare AI platform** that:
+To ensure realistic development and transparent planning, the features of HealthAI India are strictly separated into three distinct horizons.
 
-- Provides **instant, anonymous health risk assessments** — no account creation, no login, no friction
-- Covers **6 health domains**: Diabetes, Heart Disease, Stroke, Personality, Mental Health, and Sleep Health
-- Uses **traditional machine learning** (Scikit-Learn, XGBoost, LightGBM, CatBoost) for clinical-grade predictions
-- Stores **anonymous prediction history** in Supabase for analytics and future model improvement
-- Follows a **human-friendly questionnaire approach** — never exposes raw dataset column names
-- Evolves incrementally — every release is a fully working product, not a partial prototype
-- Aims to become a **complete Made in India Healthcare AI Ecosystem** over time
+### 1. MVP (Current Version)
+* **Authentication**: Mandatory registration and login using Phone Number (Primary Key) + Password.
+* **Identity**: Automatic generation of the permanent, geographical-based HealthAI ID.
+* **Dashboard**: User dashboard showing prediction history and health summary.
+* **ML Engines**: Traditional machine learning models (Scikit-Learn, XGBoost, LightGBM, CatBoost) running locally or in-process.
+* **Database**: Supabase storage for users, profiles, consent logs, prediction history, and feedback.
+* **Questionnaires**: 100% human-friendly questionnaires that auto-calculate derived features (e.g. BMI).
+
+### 2. Intermediate Versions
+* **Explainable AI**: Integration of local open-source LLMs (Gemma, Llama, Mistral, Phi) to explain predictions in plain, clinician-like language.
+* **AI Health Assistant**: Streaming health report generator and conversational assistant built on top of the prediction records.
+
+### 3. Long-Term Vision
+* **Sovereign India AI Stack**: Development of an Indigenous Medical LLM trained on local clinical datasets and textbooks.
+* **Indian Clinical RAG**: Retrieval-Augmented Generation using the Indian Medical Knowledge Base and ICMR guidelines.
+* **Multilingualism**: Native support for major Indian regional languages (Hindi, Bengali, Tamil, Telugu, etc.).
+* **Continuous Retraining**: Secure, privacy-preserving, consent-based pipeline to retrain models on local Indian populations.
 
 ---
 
-## ❌ What HealthAI India Is NOT
+## 💡 What HealthAI India Is & Is NOT
 
-- ❌ **Not a diagnostic tool** — Predictions are risk assessments, not medical diagnoses
-- ❌ **Not a telemedicine platform** — It does not connect users with doctors
-- ❌ **Not a replacement for medical professionals** — It complements, not replaces, clinical judgment
-- ❌ **Not a user-account-based platform (in MVP)** — No login, signup, or authentication required
-- ❌ **Not built on proprietary foreign AI models** — The long-term goal is indigenous AI infrastructure
+### What It Is
+* A **preventive healthcare screening platform** utilizing machine learning to assess risk levels.
+* A **secure, identity-first system** where every user registers with a phone number and is assigned a unique HealthAI ID.
+* A **longitudinal health tracker** storing prediction records over time in a secure database.
+* A **human-friendly experience** asking clear, clinical questions without exposing database column names.
+* An **incremental open-source product** designed to evolve stage-by-stage.
+
+### What It Is NOT
+* ❌ **Not a diagnostic tool** — Risk predictions do not constitute a medical diagnosis.
+* ❌ **Not a telemedicine platform** — It does not connect users directly to doctors or write prescriptions.
+* ❌ **Not an anonymous platform** — User authentication is a mandatory requirement from Day 1 to track health history.
+* ❌ **Not a replacement for clinicians** — It serves as an early-warning screening tool, complementing professional care.
 
 ---
 
 ## 🎯 Core Philosophy
 
-### Zero Friction, Maximum Access
+### Identity First, Secure Access
+Every user has a verified, secure account. Authentication is a core requirement of the application, serving as the gateway to the dashboard and the prediction modules. The phone number serves as the primary unique identifier.
 
-The platform removes every barrier between a person and health information. No signup. No login. No forms. Visit the website, select a condition, answer simple questions, get a prediction. That's it.
+### Human-First Questionnaires
+Questions are asked in plain, understandable language. Technical metrics such as BMI are calculated automatically from basic inputs (Height & Weight), ensuring no technical or dataset-specific terminology is ever exposed to the user.
 
-### Human-First Design
-
-Every questionnaire asks questions the way a real doctor would ask — in plain language. The system calculates technical metrics (BMI, cardiovascular risk scores) internally. The user never sees `GenHlth` or `SBP_Diff` — they see "How would you rate your overall health?" and "What was your most recent blood pressure reading?"
-
-### Build One, Ship One, Repeat
-
-Every phase delivers a **complete, deployable product**. Phase 1 is not "we trained a model." Phase 1 is "anyone can visit the website and get a diabetes risk prediction." This philosophy ensures real-world testing at every stage.
-
-### Made in India, For India
-
-Every architectural decision is made with the Indian context in mind: Indian datasets, Indian epidemiology, Indian clinical guidelines, and eventually Indian language support. The long-term vision is to reduce India's dependence on foreign AI for healthcare.
+### Incremental Integration
+Never build all AI models in isolation first. The project integrates one module at a time (Database -> Auth -> Diabetes -> Test -> Integrate -> Heart Disease -> Test -> Integrate...). Every phase concludes with a fully working, deployable production build.
 
 ---
 
-## 🚀 Current Phase — MVP
+## 🪪 HealthAI Identity System
 
-### What Gets Built
+Upon successful registration, the backend automatically generates a **unique HealthAI ID**. This ID serves as the user's permanent, structured healthcare identity inside the ecosystem.
 
-The initial production-ready version focuses on:
+### ID Format
+```text
+WB-01-0001-XXXXX
+│  │  │    │
+│  │  │    └── Sequential User Identifier (generated by backend)
+│  │  └─────── City Code
+│  └────────── District Code
+└───────────── State Code
+```
 
-- **6 prediction modules**: Diabetes, Heart Disease, Stroke, Personality, Mental Health, Sleep Health
-- **Traditional ML models**: Logistic Regression, Decision Trees, Random Forest, XGBoost, LightGBM
-- **Supabase as the central database**: Storing anonymous prediction history (no user accounts)
-- **Human-friendly questionnaires**: Plain-language questions with automatic feature calculation
-- **Streamlit frontend + FastAPI backend**: Clean, deployable, production-ready architecture
-- **Power BI analytics**: Dashboards for disease trends, prediction statistics, and model performance
-
-### What Is Deliberately Excluded from MVP
-
-| Feature | Status | Reason |
-|:---|:---|:---|
-| User authentication (login/signup) | ❌ Excluded | Zero-friction access is the priority |
-| User profiles & accounts | ❌ Excluded | Anonymous usage for MVP |
-| LLM-powered explanations | ❌ Future Phase | ML models are sufficient for first version |
-| AI health assistant | ❌ Future Phase | Requires stable ML pipeline first |
-| Indian language support | ❌ Long-Term Vision | English for MVP; languages in future |
-| Indigenous LLM | ❌ Long-Term Vision | Research goal, not MVP scope |
-| Mobile applications | ❌ Future Phase | Web-first for MVP |
+### Architectural Role
+* **Permanent Identity**: Stored in the `user_profiles` table and linked as a foreign key to prediction tables.
+* **Geographical Mapping**: Enables regional analysis of disease vectors (e.g. tracking heart disease risk distribution at the district level).
+* **Automatic Generation**: Instantly generated during the signup flow once the location parameters (State -> District -> City) are defined.
+* **Algorithm Status**: The detailed generation algorithm, sequence synchronization, and optimization are future development tasks. The current MVP documents and establishes the identity schema, metadata structure, and primary key workflows.
 
 ---
 
-## 🔮 Future Phase — AI-Powered Intelligence
+## 🔑 Authentication & Registration Flows
 
-Once the ML platform is stable and deployed with all 6 modules, the next evolution introduces **open-source AI models** as an intelligence layer:
+The registration and login workflow is strictly structured as follows:
 
-### AI Explanation Layer
+### 1. Registration Flow
+```text
+State Selection
+      ↓
+District Selection
+      ↓
+City Selection
+      ↓
+Phone Number (Primary Key)
+      ↓
+Full Name
+      ↓
+Date of Birth
+      ↓
+Password
+      ↓
+Confirm Password
+      ↓
+Generate Unique HealthAI ID (Backend)
+      ↓
+Account Created successfully
+```
 
-Open-source models (Gemma, Llama, Mistral, Phi) will be fine-tuned to:
+### 2. Login Flow
+Returning users access the application using:
+* **Phone Number**
+* **Password**
 
-- **Explain predictions** in plain language — "Your diabetes risk is elevated primarily due to BMI and family history"
-- **Generate personalized health reports** — Comprehensive PDF-style health summaries
-- **Answer user health questions** — Context-aware conversational AI built on prediction results
-- **Provide lifestyle recommendations** — Evidence-based suggestions tailored to individual risk profiles
-
-### Key Design Principle
-
-> **The AI assistant will NOT replace ML models.** It will complement them.
-
-The ML models remain the prediction engine. The open-source AI provides the explanation, communication, and education layer. This separation ensures:
-- Predictions remain fast, deterministic, and auditable
-- Explanations can be improved without affecting model accuracy
-- The system remains interpretable — predictions are not "black boxes"
+*Note: No email or username login is supported. Phone number serves as the primary, unique identity.*
 
 ---
 
-## 🌟 Long-Term Vision — Made in India AI Healthcare Stack
+## 🤖 Machine Learning Roadmap (Three-Stage)
 
-The ultimate aspiration of this project is to build a **fully indigenous AI healthcare ecosystem** that India owns, controls, and improves.
+To build a reliable sovereign AI ecosystem, the machine learning capabilities are structured into three distinct stages:
 
-### Stage 3 Vision Pillars
+```mermaid
+graph TD
+    subgraph Stage1 ["Stage 1 — Traditional ML (MVP)"]
+        A["Python / Scikit-Learn / XGBoost / LightGBM"] --> B["Tabular classification models (Diabetes, Heart, Stroke...)"]
+    end
+    subgraph Stage2 ["Stage 2 — Open Source AI (Intermediate)"]
+        C["Fine-tuned LLMs: Gemma / Llama / Mistral / Phi"] --> D["Explain predictions, generate health reports & answer QA"]
+    end
+    subgraph Stage3 ["Stage 3 — Made in India AI (Long-Term)"]
+        E["Indigenous Medical LLM & Sovereign RAG"] --> F["Indian Guidelines (ICMR) & Regional Languages"]
+    end
+    Stage1 --> Stage2
+    Stage2 --> Stage3
+```
 
-| Pillar | Description |
-|:---|:---|
-| **Indigenous Medical LLM** | A healthcare-specific large language model trained on Indian medical literature, clinical guidelines, and textbooks |
-| **Indigenous Healthcare RAG System** | Retrieval-Augmented Generation powered by an Indian Medical Knowledge Base for context-aware AI assistance |
-| **Indian Medical Knowledge Base** | A curated, peer-reviewed corpus of Indian clinical guidelines, Ayurveda research, ICMR publications, and epidemiological studies |
-| **Indian Clinical Guidelines Integration** | AI recommendations aligned with Indian Council of Medical Research (ICMR) and National Health Portal standards |
-| **Indian Language Support** | Multi-language interface and questionnaires in Hindi, Bengali, Tamil, Telugu, Marathi, and other Indian languages |
-| **Indian Data Pipelines** | Secure, consent-based data collection infrastructure designed to comply with India's Digital Personal Data Protection Act |
-| **Indigenous AI Infrastructure** | Model training, inference, and deployment on Indian cloud infrastructure — reducing dependence on foreign providers |
-| **Continuous Learning** | User-consented anonymized data used to periodically retrain and improve models — creating a self-improving healthcare AI |
+### Stage 1 — Traditional Machine Learning (MVP)
+* **Scope**: Powers the 6 physiological and psychological risk prediction engines.
+* **Libraries**: Scikit-Learn, Pandas, NumPy, XGBoost, LightGBM, and CatBoost.
+* **Goal**: Highly accurate, fast, and low-latency predictions on tabular clinical data.
 
-### Vision Statement
+### Stage 2 — Open Source AI (Intermediate Version)
+* **Scope**: Fine-tuning open-source LLMs (Gemma, Llama, Mistral, Phi) to act as the explanation and communication layer.
+* **Goal**: Provide user-friendly text reports, explanation of predictions, and answer follow-up queries. These models complement the traditional ML models, which remain the core decision engine.
 
-> **"To build a healthcare AI platform that a farmer in rural Punjab, a software engineer in Bengaluru, and a college student in Chennai can all use — in their language, on their device, with the same reliability and trust."**
-
-This is a **vision statement and research goal** — not part of the current MVP scope. It defines the direction of the project over years, not months.
+### Stage 3 — Made in India AI (Long-Term Vision)
+* **Scope**: Sovereign research vision for Indian healthcare.
+* **Goal**: Indigenous Medical LLMs, RAG engines using local knowledge bases, ICMR guidelines integration, and full native support for regional Indian languages.
 
 ---
 
 ## 📐 Development Strategy — Incremental Integration
 
-The project follows a strict **Incremental Integration Approach**. No models are built in isolation. Each phase ends with a fully working, deployable application.
+We follow the strict sequence of **Incremental Integration**. Every step yields a fully working product before moving to the next.
 
-### Phase 1: Diabetes Prediction
-
-```
-Database Setup → Diabetes Model Training → Testing →
-Integration into Main Application → Deployment
-```
-
-**Milestone**: Anyone can visit the website and get a diabetes risk prediction.
-
-### Phase 2: Heart Disease Prediction
-
-```
-Heart Disease Model → Testing →
-Integrate into Existing Application → Deployment
+```mermaid
+flowchart LR
+    DB["Database (Supabase)"] --> Auth["Authentication"]
+    Auth --> Diab["Diabetes AI"]
+    Diab --> Test1["Testing & Integration"]
+    Test1 --> Heart["Heart Disease AI"]
+    Heart --> Test2["Testing & Integration"]
+    Test2 --> Stroke["Stroke AI"]
+    Stroke --> Test3["Testing & Integration"]
+    Test3 --> Next["Remaining AI Modules..."]
 ```
 
-**Milestone**: Working app with Diabetes + Heart Disease prediction.
-
-### Phase 3: Stroke Prediction
-
-```
-Stroke Model → Testing → Integration → Deployment
-```
-
-**Milestone**: Working app with Diabetes + Heart + Stroke prediction.
-
-### Phase 4: Personality Assessment
-
-```
-Personality Model → Testing → Integration → Deployment
-```
-
-### Phase 5: Mental Health Assessment
-
-```
-Mental Health Model → Testing → Integration → Deployment
-```
-
-### Phase 6: Sleep Health Assessment
-
-```
-Sleep Health Model → Testing → Integration → Deployment
-```
-
-**Final Milestone**: Complete Healthcare AI Platform with all 6 modules.
+1. **Database & Auth (Stage 0)**: Connect authentication system with Supabase. Establish the HealthAI ID generation workflow.
+2. **Diabetes AI (Stage 1)**: First AI module. Develop, test, integrate, and deploy.
+3. **Heart Disease AI (Stage 2)**: Second AI module. Preprocess, train, test, merge, and redeploy.
+4. **Stroke AI (Stage 3)**: Third AI module. Rebalance (SMOTE), optimize threshold, test, merge, and redeploy.
+5. **Remaining Modules (Stage 4)**: Personality, Mental Health, Sleep Health.
+6. **Final Platform (Stage 5)**: Complete stabilized app with all 6 modules.
 
 ---
 
 ## 📁 Repository Evolution
 
-The repository structure grows organically with each phase. No dead code. No placeholder modules.
+The repository evolves step-by-step:
 
-### Version 1 — Diabetes Only
+### Version 1
+* Authentication + Supabase + HealthAI ID + Diabetes AI
 
-```text
-healthai-india/
+### Version 2
+* Authentication + Supabase + HealthAI ID + Diabetes + Heart Disease
 
-├── frontend/
-│       └── pages/
-│              └── diabetes.py
-├── backend/
-│       ├── main.py
-│       └── routes/
-│              └── diabetes.py
-├── models/
-│       └── diabetes/
-│              ├── diabetes_model.pkl
-│              ├── scaler.pkl
-│              └── training/
-├── database/
-│       └── setup.py
-├── docs/
-│       ├── idea.md
-│       ├── PRD.md
-│       └── TRD.md
-├── datasets/
-│       └── diabetes/
-├── app.py
-└── README.md
-```
+### Version 3
+* Authentication + Supabase + HealthAI ID + Diabetes + Heart Disease + Stroke
 
-### Version 2 — Diabetes + Heart Disease
-
-```text
-healthai-india/
-
-├── frontend/
-│       └── pages/
-│              ├── diabetes.py
-│              └── heart.py
-├── backend/
-│       ├── main.py
-│       └── routes/
-│              ├── diabetes.py
-│              └── heart.py
-├── models/
-│       ├── diabetes/
-│       └── heart/
-│              ├── heart_model.pkl
-│              └── scaler.pkl
-├── database/
-├── docs/
-├── datasets/
-└── README.md
-```
-
-### Version 3 — Diabetes + Heart + Stroke
-
-```text
-healthai-india/
-
-├── frontend/
-│       └── pages/
-│              ├── diabetes.py
-│              ├── heart.py
-│              └── stroke.py
-├── backend/
-│       ├── main.py
-│       └── routes/
-│              ├── diabetes.py
-│              ├── heart.py
-│              └── stroke.py
-├── models/
-│       ├── diabetes/
-│       ├── heart/
-│       └── stroke/
-├── database/
-├── docs/
-├── datasets/
-└── README.md
-```
-
-### Final Version — Complete Platform
-
-```text
-healthai-india/
-
-├── frontend/
-│       └── pages/
-│              ├── diabetes.py
-│              ├── heart.py
-│              ├── stroke.py
-│              ├── personality.py
-│              ├── mental_health.py
-│              └── sleep_health.py
-├── backend/
-│       ├── main.py
-│       └── routes/
-│              ├── diabetes.py
-│              ├── heart.py
-│              ├── stroke.py
-│              ├── personality.py
-│              ├── mental_health.py
-│              └── sleep_health.py
-├── models/
-│       ├── diabetes/
-│       ├── heart/
-│       ├── stroke/
-│       ├── personality/
-│       ├── mental_health/
-│       └── sleep_health/
-├── database/
-├── docs/
-├── datasets/
-├── app.py
-└── README.md
-```
+### Final Version
+* Authentication + Supabase + HealthAI ID + All 6 AI Modules (Diabetes, Heart Disease, Stroke, Personality, Mental Health, Sleep Health) + Prediction History + Dashboard + Feedback
 
 ---
 
 ## 🏆 Differentiators & Impact
 
-### What Makes This Different
-
-1. **Zero-barrier access** — No account required. Visit, predict, leave. This is fundamentally different from every health platform that gates features behind authentication.
-
-2. **Incremental delivery** — Every milestone is a deployable product. Not "we built 6 models and now need to integrate them." It's "we have 6 phases, each ending with a working app."
-
-3. **Human-first questionnaires** — No dataset column names exposed. BMI is calculated from height and weight. Health is described in plain language.
-
-4. **Designed for data sovereignty** — Anonymous prediction history stored in Supabase, designed to be retrainable, designed to be Indian-owned.
-
-5. **Three-stage AI roadmap** — Clear progression from traditional ML → open-source AI → indigenous healthcare AI stack. No confusion about what's built now vs. what's future research.
-
-### Projected Impact
-
-| Metric | Target |
-|:---|:---|
-| Users who can access health screening | Anyone with a web browser |
-| Cost per health assessment | ₹0 (free, open-source) |
-| Time to get a risk assessment | Under 60 seconds |
-| Indian clinical alignment | Indian datasets + Indian epidemiological focus |
-| Data sovereignty | 100% — Indian-hosted infrastructure |
-| Languages supported (long-term) | All major Indian languages |
+1. **Geographically-Linked Identity**: The HealthAI ID system maps chronic risks across Indian locations.
+2. **Frictionless Security**: Phone-based authentication provides secure longitudinal tracking without requiring email addresses.
+3. **Clinical Interpretability**: A clear partition between ML classifiers and open-source generative models ensures predictions remain deterministic and explainable.
+4. **Data Sovereignty**: Consented health telemetry is retained locally in line with India's Digital Personal Data Protection Act.
 
 ---
 
 ## 🤝 Open Source & Community
 
-HealthAI India is designed to be:
-
-- **Open source** — The entire codebase, documentation, and trained models are publicly available
-- **Community-driven** — Contributions welcome for new disease modules, improved models, language support
-- **Research-friendly** — Anonymized prediction data can support academic research in Indian healthcare AI
-- **Hackathon-ready** — Modular architecture makes it easy to extend with new prediction modules
-
----
-
-## 📄 Document Alignment
-
-| Document | Focus |
-|:---|:---|
-| **Idea.md** (this file) | Vision, problem statement, future goals, why this matters for India |
-| **PRD.md** | Functional requirements, user flow, questionnaires, prediction modules, incremental releases |
-| **TRD.md** | Technical architecture, ML pipeline, Supabase schema, API design, deployment strategy |
-
----
-
-*HealthAI India — Building a Made in India Healthcare AI Ecosystem*
+HealthAI India is built as an open-source initiative designed for community contributions, research collaborations, and educational extensions. By keeping the modules isolated and the documentation thorough, developers and clinical researchers can easily add features, refine models, and build localized adapters.
